@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
-import { Card, Col, Row } from 'react-bootstrap';
+import { useCallback, useMemo, useState } from 'react';
+import { Button, Card, Col, Form, Modal, Row } from 'react-bootstrap';
 import {
   IconBuildingWarehouse,
   IconCircleCheck,
+  IconPlus,
   IconTool,
   IconTruckDelivery,
 } from '@tabler/icons-react';
@@ -22,8 +23,11 @@ import {
 } from '../../components/common';
 import { useEquipment } from '../../hooks';
 import { usePageTitle } from '../../hooks/usePageTitle';
-import { humanizeEnum } from '../../utils';
-import type { EquipmentStatus } from '../../types';
+import { useToast } from '../../context/ToastContext';
+import { equipmentApi } from '../../api/gseApi';
+import { EQUIPMENT_TYPES } from '../../types';
+import { humanizeEnum, getErrorMessage } from '../../utils';
+import type { EquipmentStatus, EquipmentType, GroundEquipmentRequest } from '../../types';
 
 const STATUS_COLORS: Record<EquipmentStatus, string> = {
   Available: '#198754',
@@ -32,9 +36,22 @@ const STATUS_COLORS: Record<EquipmentStatus, string> = {
   OutOfService: '#dc3545',
 };
 
+const emptyRegisterForm = (): GroundEquipmentRequest => ({
+  type: 'StairsTruck',
+  registrationNumber: '',
+  currentLocation: '',
+});
+
 export default function GseDashboardPage() {
   usePageTitle('GSE Dashboard');
+  const toast = useToast();
   const { equipment, loading, error, reload } = useEquipment();
+
+  // Bug 2: Register equipment modal on dashboard
+  const [showRegister, setShowRegister] = useState(false);
+  const [registerForm, setRegisterForm] = useState<GroundEquipmentRequest>(emptyRegisterForm);
+  const [registerSubmitting, setRegisterSubmitting] = useState(false);
+  const [validated, setValidated] = useState(false);
 
   const counts = useMemo(() => {
     const base: Record<EquipmentStatus, number> = {
@@ -61,11 +78,53 @@ export default function GseDashboardPage() {
     [counts],
   );
 
+  const openRegister = useCallback(() => {
+    setRegisterForm(emptyRegisterForm());
+    setValidated(false);
+    setShowRegister(true);
+  }, []);
+
+  const closeRegister = useCallback(() => {
+    if (registerSubmitting) return;
+    setShowRegister(false);
+  }, [registerSubmitting]);
+
+  const handleRegister = useCallback(async () => {
+    setValidated(true);
+    if (!registerForm.registrationNumber.trim()) return;
+    setRegisterSubmitting(true);
+    try {
+      await equipmentApi.create({
+        type: registerForm.type,
+        registrationNumber: registerForm.registrationNumber.trim(),
+        currentLocation: registerForm.currentLocation?.trim() || undefined,
+      });
+      toast.success('Equipment registered');
+      setShowRegister(false);
+      await reload();
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+    } finally {
+      setRegisterSubmitting(false);
+    }
+  }, [registerForm, toast, reload]);
+
   return (
     <>
+      {/* Bug 2: Register button in page header */}
       <PageHeader
         title="GSE Dashboard"
         subtitle="Ground support equipment fleet overview"
+        actions={
+          <Button
+            variant="primary"
+            onClick={openRegister}
+            className="d-inline-flex align-items-center gap-1"
+          >
+            <IconPlus size={18} />
+            Register Equipment
+          </Button>
+        }
       />
 
       <Row className="g-3 mb-4">
@@ -177,6 +236,75 @@ export default function GseDashboardPage() {
           </Col>
         </Row>
       </AsyncSection>
+
+      {/* Bug 2: Register Equipment Modal */}
+      <Modal show={showRegister} onHide={closeRegister} centered>
+        <Modal.Header closeButton>
+          <Modal.Title className="h6 mb-0">Register New Equipment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group className="mb-3" controlId="regType">
+            <Form.Label>Equipment Type</Form.Label>
+            <Form.Select
+              value={registerForm.type}
+              onChange={(e) =>
+                setRegisterForm({
+                  ...registerForm,
+                  type: e.target.value as EquipmentType,
+                })
+              }
+            >
+              {EQUIPMENT_TYPES.map((t) => (
+                <option key={t} value={t}>
+                  {humanizeEnum(t)}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="regNumber">
+            <Form.Label>Registration Number</Form.Label>
+            <Form.Control
+              value={registerForm.registrationNumber}
+              onChange={(e) =>
+                setRegisterForm({
+                  ...registerForm,
+                  registrationNumber: e.target.value,
+                })
+              }
+              isInvalid={validated && !registerForm.registrationNumber.trim()}
+              placeholder="e.g. GSE-001"
+            />
+            <Form.Control.Feedback type="invalid">
+              Registration number is required.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className="mb-1" controlId="regLocation">
+            <Form.Label>Current Location (optional)</Form.Label>
+            <Form.Control
+              value={registerForm.currentLocation ?? ''}
+              onChange={(e) =>
+                setRegisterForm({
+                  ...registerForm,
+                  currentLocation: e.target.value,
+                })
+              }
+              placeholder="e.g. Terminal 2 Apron"
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="light" onClick={closeRegister} disabled={registerSubmitting}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleRegister}
+            disabled={registerSubmitting}
+          >
+            {registerSubmitting ? 'Registering…' : 'Register'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

@@ -1,14 +1,15 @@
-import { Card, Col, Row } from 'react-bootstrap';
+import { useState } from 'react';
+import { Accordion, Badge, ProgressBar } from 'react-bootstrap';
 import { PageHeader, AsyncSection, StatusBadge } from '../../components/common';
-import TurnaroundProgress from '../../components/turnaround/TurnaroundProgress';
-import MilestoneTimeline from '../../components/turnaround/MilestoneTimeline';
 import { useTurnarounds, usePageTitle } from '../../hooks';
-import { formatMinutes } from '../../utils';
+import { formatDateTime, formatMinutes } from '../../utils';
 
 export default function TurnaroundViewPage() {
   usePageTitle('Turnaround View');
 
   const { turnarounds, loading, error, reload } = useTurnarounds();
+  // Bug 5: No item open by default
+  const [activeKey, setActiveKey] = useState<string | null>(null);
 
   return (
     <>
@@ -26,29 +27,82 @@ export default function TurnaroundViewPage() {
         emptyTitle="No active turnarounds"
         emptyMessage="There are no turnaround plans to display."
       >
-        <Row className="g-3">
-          {turnarounds.map((plan) => (
-            <Col md={6} key={plan.planId}>
-              <Card className="h-100 shadow-sm">
-                <Card.Header className="d-flex flex-wrap align-items-center justify-content-between gap-2">
-                  <span className="fw-semibold">
-                    {plan.flightNumber} <StatusBadge status={plan.status} />
+        {/* Bug 5: Accordion instead of flat card grid */}
+        <Accordion
+          flush
+          activeKey={activeKey ?? undefined}
+          onSelect={(k) => setActiveKey(k as string | null)}
+        >
+          {turnarounds.map((plan) => {
+            const completed = plan.milestones.filter(
+              (m) => m.status === 'Completed',
+            ).length;
+            const total = plan.milestones.length;
+            const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            return (
+              <Accordion.Item eventKey={plan.planId} key={plan.planId}>
+                <Accordion.Header>
+                  <span className="fw-semibold me-2">{plan.flightNumber}</span>
+                  {plan.stand && (
+                    <span className="text-muted me-2 small">· Stand {plan.stand}</span>
+                  )}
+                  <StatusBadge status={plan.status} />
+                  <span className="ms-auto me-2 small text-muted">
+                    Target {formatMinutes(plan.targetTurnaroundMinutes)}
                   </span>
-                  <span className="small text-muted">
-                    Target {formatMinutes(plan.targetTurnaroundMinutes)} · Actual{' '}
-                    {formatMinutes(plan.actualTurnaroundMinutes)}
-                  </span>
-                </Card.Header>
-                <Card.Body>
-                  <TurnaroundProgress milestones={plan.milestones} />
-                  <div className="mt-3">
-                    <MilestoneTimeline milestones={plan.milestones} />
+                </Accordion.Header>
+                <Accordion.Body>
+                  <div className="mb-3">
+                    <div className="d-flex justify-content-between small mb-1">
+                      <span>Milestone progress</span>
+                      <span>{completed}/{total} completed</span>
+                    </div>
+                    <ProgressBar now={pct} label={`${pct}%`} />
                   </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+
+                  <table className="table table-sm align-middle mb-0">
+                    <thead className="table-light">
+                      <tr>
+                        <th>Milestone</th>
+                        <th>Planned</th>
+                        <th>Actual</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {plan.milestones.map((m) => (
+                        <tr key={m.milestoneId}>
+                          <td className="fw-semibold">{m.milestoneType}</td>
+                          <td className="small text-muted">
+                            {formatDateTime(m.plannedTime)}
+                          </td>
+                          <td className="small">
+                            {m.actualTime ? (
+                              <span className={m.delayed || m.isDelayed ? 'text-danger' : ''}>
+                                {formatDateTime(m.actualTime)}
+                                {(m.delayed || m.isDelayed) && m.delayMinutes != null && (
+                                  <Badge bg="danger" className="ms-1 fw-normal">
+                                    +{m.delayMinutes}m
+                                  </Badge>
+                                )}
+                              </span>
+                            ) : (
+                              <span className="text-muted">—</span>
+                            )}
+                          </td>
+                          <td>
+                            <StatusBadge status={m.status} />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Accordion.Body>
+              </Accordion.Item>
+            );
+          })}
+        </Accordion>
       </AsyncSection>
     </>
   );

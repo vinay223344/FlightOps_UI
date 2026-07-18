@@ -80,6 +80,7 @@ export interface HandlingRequestResponse {
 export interface TurnaroundMilestoneResponse {
   milestoneId: string;
   planId: string;
+  flightId: string;
   milestoneType: MilestoneType;
   plannedTime: string;
   actualTime: string | null;

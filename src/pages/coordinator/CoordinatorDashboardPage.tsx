@@ -3,20 +3,23 @@ import {
   IconClipboardList,
   IconCircleCheck,
   IconClock,
+  IconAlertTriangle,
 } from '@tabler/icons-react';
 import { PageHeader, StatCard, StatusBadge, AsyncSection } from '../../components/common';
 import { useFlights, useHandlingRequests, usePageTitle } from '../../hooks';
+import { useAuth } from '../../context/AuthContext';
 import { formatTime } from '../../utils';
 import {storageService} from "../../services/storageService";
 
 export default function CoordinatorDashboardPage() {
   usePageTitle('Coordinator Dashboard');
+  const { user } = useAuth();
 
   const currentUser = storageService.getUser();
   const userId = currentUser?.userId ?? '';
 
   const {
-    requests,
+    requests: allRequests,
     loading: requestsLoading,
     error: requestsError,
     reload: reloadRequests,
@@ -27,6 +30,9 @@ export default function CoordinatorDashboardPage() {
     error: flightsError,
     reload: reloadFlights,
   } = useFlights();
+
+  // Bug 2: Filter by logged-in user's requests only
+  const requests = allRequests.filter((r) => r.requestedById === user?.userId);
 
   const confirmedCount = requests.filter((r) => r.status === 'Confirmed').length;
   const pendingCount = requests.filter((r) => r.status === 'Received').length;
@@ -70,11 +76,12 @@ export default function CoordinatorDashboardPage() {
             accent="warning"
           />
         </Col>
+        {/* Bug 1: Added Disputed card */}
         <Col md={3}>
           <StatCard
             label="Disputed"
             value={disputedCount}
-            icon={IconClock}
+            icon={IconAlertTriangle}
             accent="danger"
           />
         </Col>

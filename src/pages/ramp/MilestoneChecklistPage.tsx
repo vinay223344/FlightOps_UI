@@ -38,6 +38,7 @@ export default function MilestoneChecklistPage() {
     setSubmitting(true);
     try {
       await milestonesApi.complete(active.milestoneId, {
+        flightId: active.flightId,
         actualTime: fromDateTimeLocalInput(actualTime),
         notes: notes.trim() || undefined,
       });

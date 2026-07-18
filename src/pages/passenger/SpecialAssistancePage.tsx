@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Button, Form, Modal, Table } from 'react-bootstrap';
-import { IconPlus, IconUserCheck, IconCircleCheck } from '@tabler/icons-react';
+import { IconPlus, IconCircleCheck } from '@tabler/icons-react';
 import {
   PageHeader,
   AsyncSection,
@@ -47,7 +47,17 @@ export default function SpecialAssistancePage() {
   const [submitting, setSubmitting] = useState(false);
   const [actionBusy, setActionBusy] = useState(false);
 
-  const sortedRequests = [...requests].sort((a, b) => {
+  // Bug 1: Filter counters where assignedAgentId === user.userId
+  // OR status === 'Requested' (unassigned — visible so agents can see queue)
+  const filteredRequests = useMemo(() => {
+    return requests.filter(
+      (r) =>
+        r.assignedAgentId === user?.userId ||
+        r.status === 'Requested',
+    );
+  }, [requests, user?.userId]);
+
+  const sortedRequests = [...filteredRequests].sort((a, b) => {
     const aReq = a.status === 'Requested' ? 0 : 1;
     const bReq = b.status === 'Requested' ? 0 : 1;
     return aReq - bReq;
@@ -87,23 +97,8 @@ export default function SpecialAssistancePage() {
     }
   }, [form, toast, reload]);
 
-  const handleAssign = useCallback(
-    async (id: string) => {
-      if (!user?.userId) return;
-      setActionBusy(true);
-      try {
-        await assistanceApi.assign(id, { agentId: user.userId });
-        toast.success('Assigned to you');
-        await reload();
-      } catch (err) {
-        toast.error(getErrorMessage(err));
-      } finally {
-        setActionBusy(false);
-      }
-    },
-    [user, toast, reload],
-  );
-
+  // Bug 2: Remove "Assign to me" button. Only show "Complete" on requests
+  // where this agent is assigned (assignedAgentId === user.userId)
   const handleComplete = useCallback(
     async (id: string) => {
       const ok = await confirm({
@@ -141,11 +136,11 @@ export default function SpecialAssistancePage() {
       <AsyncSection
         loading={loading}
         error={error}
-        hasData={requests.length > 0}
-        isEmpty={requests.length === 0}
+        hasData={sortedRequests.length > 0}
+        isEmpty={sortedRequests.length === 0}
         onRetry={reload}
         emptyTitle="No requests"
-        emptyMessage="There are no special assistance requests."
+        emptyMessage="There are no special assistance requests assigned to you or awaiting assignment."
       >
         <Table hover responsive className="table-sm align-middle">
           <thead>
@@ -169,28 +164,22 @@ export default function SpecialAssistancePage() {
                   <StatusBadge status={r.status} />
                 </td>
                 <td className="text-end">
+                  {/* Bug 2: No "Assign to me" button. Show "Pending Assignment" badge or Complete button. */}
                   {r.status === 'Requested' && (
-                    <Button
-                      size="sm"
-                      variant="outline-primary"
-                      disabled={actionBusy}
-                      onClick={() => handleAssign(r.assistanceId)}
-                    >
-                      <IconUserCheck size={16} className="me-1" />
-                      Assign to me
-                    </Button>
+                    <span className="badge bg-warning text-dark">Pending Assignment</span>
                   )}
-                  {r.status === 'Assigned' && (
-                    <Button
-                      size="sm"
-                      variant="outline-success"
-                      disabled={actionBusy}
-                      onClick={() => handleComplete(r.assistanceId)}
-                    >
-                      <IconCircleCheck size={16} className="me-1" />
-                      Complete
-                    </Button>
-                  )}
+                  {r.status === 'Assigned' &&
+                    r.assignedAgentId === user?.userId && (
+                      <Button
+                        size="sm"
+                        variant="outline-success"
+                        disabled={actionBusy}
+                        onClick={() => handleComplete(r.assistanceId)}
+                      >
+                        <IconCircleCheck size={16} className="me-1" />
+                        Complete
+                      </Button>
+                    )}
                 </td>
               </tr>
             ))}

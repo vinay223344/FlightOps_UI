@@ -11,6 +11,7 @@ import type {
   FlightStatus,
   GateStatus,
   MilestoneStatus,
+  MilestoneType,
   MishandledStatus,
   MishandledType,
   NotificationCategory,
@@ -89,9 +90,12 @@ export interface HandlingStatusRequest {
 export interface TurnaroundPlanRequest {
   flightId: string;
   targetTurnaroundMinutes: number;
+  /** Optional: specific milestone types to include. If empty/absent, backend uses all 10. */
+  milestoneTypes?: MilestoneType[];
 }
 
 export interface MilestoneCompleteRequest {
+  flightId: string,
   actualTime: string;
   notes?: string;
 }

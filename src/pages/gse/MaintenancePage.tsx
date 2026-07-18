@@ -8,13 +8,14 @@ import {
   StatusBadge,
 } from '../../components/common';
 import { useToast } from '../../context/ToastContext';
-import { useConfirm, useEquipment, useMaintenance } from '../../hooks';
+import { useConfirm, useAvailableEquipment, useMaintenance } from '../../hooks';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { maintenanceApi } from '../../api/gseApi';
 import {
   formatDateTime,
   fromDateTimeLocalInput,
   getErrorMessage,
+  humanizeEnum,
 } from '../../utils';
 import type { EquipmentMaintenanceRequest } from '../../types';
 
@@ -22,7 +23,8 @@ export default function MaintenancePage() {
   usePageTitle('Maintenance');
   const toast = useToast();
   const { records, loading, error, reload } = useMaintenance();
-  const { equipment } = useEquipment();
+  // Bug 3: Only Available equipment can be reported for maintenance
+  const { equipment: availableEquipment } = useAvailableEquipment();
   const { confirmState, confirm, onConfirm, onCancel } = useConfirm();
 
   const [showModal, setShowModal] = useState(false);
@@ -174,13 +176,16 @@ export default function MaintenancePage() {
               onChange={(e) => setEquipmentId(e.target.value)}
               isInvalid={validated && !equipmentId}
             >
-              <option value="">Select equipment…</option>
-              {equipment.map((e) => (
+              <option value="">Select available equipment…</option>
+              {availableEquipment.map((e) => (
                 <option key={e.equipmentId} value={e.equipmentId}>
-                  {e.registrationNumber}
+                  {e.registrationNumber} · {humanizeEnum(e.type)}
                 </option>
               ))}
             </Form.Select>
+            <Form.Text className="text-muted">
+              Only Available equipment can be reported for maintenance.
+            </Form.Text>
             <Form.Control.Feedback type="invalid">
               Please select equipment.
             </Form.Control.Feedback>

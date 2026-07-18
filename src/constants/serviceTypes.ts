@@ -1,15 +1,12 @@
-/** Ground-handling services a coordinator can request (checkbox options). */
+/** Ground-handling services a coordinator can request (checkbox options).
+ * These MUST match the keys in SERVICE_TO_MILESTONES exactly.
+ */
 export const HANDLING_SERVICE_OPTIONS: string[] = [
   'Ramp',
   'Baggage',
-  'Fuel',
-  'Catering',
   'Cleaning',
-  'PushBack',
-  'GPU',
-  'WaterService',
-  'LavatoryService',
-  'Deicing',
+  'Catering',
+  'Fuelling',
 ];
 
 /** Common target turnaround presets (minutes) for the plan form. */

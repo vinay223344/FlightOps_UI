@@ -16,7 +16,8 @@ import type { HandlingRequestDto } from '../../types';
 import { storageService } from '../../services/storageService';
 
 export default function HandlingRequestsPage() {
-  usePageTitle('Handling Requests');
+  // Bug 7: page title says "Your Handling Requests"
+  usePageTitle('Your Handling Requests');
   const toast = useToast();
 
   const currentUser = storageService.getUser();
@@ -96,7 +97,7 @@ export default function HandlingRequestsPage() {
   return (
     <>
       <PageHeader
-        title="Handling Requests"
+        title="Your Handling Requests"
         subtitle="Request ground-handling services for your flights"
         actions={
           <Button variant="primary" onClick={openModal}>
@@ -119,6 +120,7 @@ export default function HandlingRequestsPage() {
           <thead>
             <tr>
               <th>Flight</th>
+              {/* Bug 4: service chips use bg-info text-dark */}
               <th>Services</th>
               <th>Special Requirements</th>
               <th>Status</th>
@@ -129,9 +131,10 @@ export default function HandlingRequestsPage() {
               <tr key={r.requestId}>
                 <td className="fw-semibold">{r.flightNumber}</td>
                 <td>
+                  {/* Bug 4: each service as bg-info text-dark badge */}
                   <div className="d-flex flex-wrap gap-1">
                     {splitServiceTypes(r.serviceTypes).map((s) => (
-                      <Badge key={s} bg="secondary" className="fw-normal">
+                      <Badge key={s} bg="info" text="dark" className="fw-normal">
                         {s}
                       </Badge>
                     ))}
@@ -165,6 +168,7 @@ export default function HandlingRequestsPage() {
             )}
           </Form.Group>
 
+          {/* Bug 3: Only show milestone-mapped services (Ramp, Baggage, Cleaning, Catering, Fuelling) */}
           <Form.Group className="mb-3">
             <Form.Label>Services</Form.Label>
             <div className="d-flex flex-wrap gap-3">

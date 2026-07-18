@@ -53,7 +53,7 @@ export const ROLE_NAV: Record<Role, NavItem[]> = {
   GroundSupervisor: [
     { label: 'Dashboard', to: '/supervisor', icon: IconDashboard, end: true },
     {
-      label: 'Handling Queue',
+      label: 'Handling Requests',
       to: '/supervisor/handling-queue',
       icon: IconClipboardText,
     },
@@ -67,10 +67,14 @@ export const ROLE_NAV: Record<Role, NavItem[]> = {
       to: '/supervisor/delay-flags',
       icon: IconAlertTriangle,
     },
+    // {
+    //   label: 'Special Assistance',
+    //   to: '/supervisor/assistance',
+    //   icon: IconWheelchair,
+    // },
   ],
   GSEManager: [
     { label: 'Dashboard', to: '/gse', icon: IconDashboard, end: true },
-    { label: 'Equipment', to: '/gse/equipment', icon: IconBuildingWarehouse },
     { label: 'Allocations', to: '/gse/allocations', icon: IconTruckDelivery },
     { label: 'Maintenance', to: '/gse/maintenance', icon: IconTool },
   ],
