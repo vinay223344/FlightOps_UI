@@ -3,10 +3,10 @@ import { handlingRequestsApi } from '../api/handlingRequestsApi';
 import type { HandlingRequestResponse } from '../types';
 import { useAsyncData } from './useAsyncData';
 
-export function useHandlingRequests(airline?: string) {
+export function useHandlingRequests(userId: string, airline?: string) {
   const fetcher = useCallback(
-    () => handlingRequestsApi.list(airline),
-    [airline],
+    () => handlingRequestsApi.listByUserId(userId),
+    [userId],
   );
   const { data, loading, error, reload } = useAsyncData<
     HandlingRequestResponse[]

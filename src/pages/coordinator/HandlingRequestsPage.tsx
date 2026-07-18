@@ -13,12 +13,16 @@ import {
   splitServiceTypes,
 } from '../../utils';
 import type { HandlingRequestDto } from '../../types';
+import { storageService } from '../../services/storageService';
 
 export default function HandlingRequestsPage() {
   usePageTitle('Handling Requests');
   const toast = useToast();
 
-  const { requests, loading, error, reload } = useHandlingRequests();
+  const currentUser = storageService.getUser();
+  const userId = currentUser?.userId ?? '';
+
+  const { requests, loading, error, reload } = useHandlingRequests(userId);
   const { flights } = useFlights(undefined, false);
 
   const [showModal, setShowModal] = useState(false);
@@ -117,7 +121,6 @@ export default function HandlingRequestsPage() {
               <th>Flight</th>
               <th>Services</th>
               <th>Special Requirements</th>
-              <th>Requested By</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -135,7 +138,6 @@ export default function HandlingRequestsPage() {
                   </div>
                 </td>
                 <td>{r.specialRequirements || <span className="text-muted">—</span>}</td>
-                <td>{r.requestedByName}</td>
                 <td>
                   <StatusBadge status={r.status} />
                 </td>

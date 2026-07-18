@@ -7,16 +7,20 @@ import {
 import { PageHeader, StatCard, StatusBadge, AsyncSection } from '../../components/common';
 import { useFlights, useHandlingRequests, usePageTitle } from '../../hooks';
 import { formatTime } from '../../utils';
+import {storageService} from "../../services/storageService";
 
 export default function CoordinatorDashboardPage() {
   usePageTitle('Coordinator Dashboard');
+
+  const currentUser = storageService.getUser();
+  const userId = currentUser?.userId ?? '';
 
   const {
     requests,
     loading: requestsLoading,
     error: requestsError,
     reload: reloadRequests,
-  } = useHandlingRequests();
+  } = useHandlingRequests(userId);
   const {
     flights,
     loading: flightsLoading,
@@ -26,6 +30,7 @@ export default function CoordinatorDashboardPage() {
 
   const confirmedCount = requests.filter((r) => r.status === 'Confirmed').length;
   const pendingCount = requests.filter((r) => r.status === 'Received').length;
+  const disputedCount = requests.filter((r) => r.status === 'Disputed').length;
 
   const loading = requestsLoading || flightsLoading;
   const error = requestsError ?? flightsError;
@@ -41,7 +46,7 @@ export default function CoordinatorDashboardPage() {
       <PageHeader title="Coordinator Dashboard" />
 
       <Row className="g-3 mb-4">
-        <Col md={4}>
+        <Col md={3}>
           <StatCard
             label="My Requests"
             value={requests.length}
@@ -49,7 +54,7 @@ export default function CoordinatorDashboardPage() {
             accent="primary"
           />
         </Col>
-        <Col md={4}>
+        <Col md={3}>
           <StatCard
             label="Confirmed"
             value={confirmedCount}
@@ -57,12 +62,20 @@ export default function CoordinatorDashboardPage() {
             accent="success"
           />
         </Col>
-        <Col md={4}>
+        <Col md={3}>
           <StatCard
             label="Pending"
             value={pendingCount}
             icon={IconClock}
             accent="warning"
+          />
+        </Col>
+        <Col md={3}>
+          <StatCard
+            label="Disputed"
+            value={disputedCount}
+            icon={IconClock}
+            accent="danger"
           />
         </Col>
       </Row>
@@ -94,7 +107,6 @@ export default function CoordinatorDashboardPage() {
               return (
                 <tr key={f.flightId}>
                   <td className="fw-semibold">
-                    {f.airlineCode}
                     {f.flightNumber}
                   </td>
                   <td>

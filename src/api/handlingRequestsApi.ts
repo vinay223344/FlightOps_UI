@@ -14,6 +14,12 @@ export const handlingRequestsApi = {
     );
     return res.data.data;
   },
+  async listByUserId(userId: string): Promise<HandlingRequestResponse[]> {
+    const res = await api.get<ApiResponse<HandlingRequestResponse[]>>(
+      `/api/handling-requests/byUser/${userId}`,
+    );
+    return res.data.data;
+  },
 
   async getById(id: string): Promise<HandlingRequestResponse> {
     const res = await api.get<ApiResponse<HandlingRequestResponse>>(
