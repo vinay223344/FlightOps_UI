@@ -37,7 +37,7 @@ export default function CheckInCountersPage() {
   usePageTitle('Check-in Counters');
   const toast = useToast();
   const { user } = useAuth();
-  const { counters, loading, error, reload } = useCounters();
+  const { counters, loading, error, reload } = useCounters(user?.userId);
   const { flights } = useFlights(undefined, false);
 
   const [showCreate, setShowCreate] = useState(false);

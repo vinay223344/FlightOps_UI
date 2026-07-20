@@ -19,6 +19,13 @@ export const countersApi = {
     return res.data.data;
   },
 
+  async listByUserID(userId: string): Promise<CheckInCounterResponse[]> {
+    const res = await api.get<ApiResponse<CheckInCounterResponse[]>>(
+      `/api/counters/byUser/${userId}`,
+    );
+    return res.data.data;
+  },
+
   async listByFlight(flightId: string): Promise<CheckInCounterResponse[]> {
     const res = await api.get<ApiResponse<CheckInCounterResponse[]>>(
       `/api/counters/flight/${flightId}`,
@@ -51,6 +58,13 @@ export const countersApi = {
 export const gatesApi = {
   async list(): Promise<BoardingGateResponse[]> {
     const res = await api.get<ApiResponse<BoardingGateResponse[]>>('/api/gates');
+    return res.data.data;
+  },
+
+  async listByUserID(userId: string): Promise<BoardingGateResponse[]> {
+    const res = await api.get<ApiResponse<BoardingGateResponse[]>>(
+      `/api/gates/byUser/${userId}`,
+    );
     return res.data.data;
   },
 
@@ -97,6 +111,11 @@ export const assistanceApi = {
       payload,
     );
     return res.data.data;
+  },
+
+  getByUserId: async (userId: string): Promise<SpecialAssistanceResponse[]> => {
+    const response = await api.get(`/api/special-assistance/byUser/${userId}`);
+    return response.data.data;
   },
 
   async assign(

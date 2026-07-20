@@ -37,7 +37,7 @@ export default function BoardingGatesPage() {
   usePageTitle('Boarding Gates');
   const toast = useToast();
   const { user } = useAuth();
-  const { gates, loading, error, reload } = useGates();
+  const { gates, loading, error, reload } = useGates(user?.userId);
   const { flights } = useFlights(undefined, false);
 
   const [showCreate, setShowCreate] = useState(false);

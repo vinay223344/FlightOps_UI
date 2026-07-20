@@ -15,24 +15,30 @@ import {
   useGates,
   useAssistance,
   usePageTitle,
+  useAssistanceByUserId,
 } from '../../hooks';
+
+import { useAuth } from '../../context/AuthContext';
 
 export default function PassengerDashboardPage() {
   usePageTitle('Passenger Services Dashboard');
+
+  const {user} = useAuth();
+
 
   const {
     counters,
     loading: countersLoading,
     error: countersError,
     reload: reloadCounters,
-  } = useCounters();
+  } = useCounters(user?.userId);
   const {
     gates,
     loading: gatesLoading,
     error: gatesError,
     reload: reloadGates,
-  } = useGates();
-  const { requests } = useAssistance();
+  } = useGates(user?.userId);
+  const { requests } = useAssistanceByUserId(user?.userId);
 
   const openCounters = counters.filter((c) => c.status === 'Open').length;
   const boardingGates = gates.filter(

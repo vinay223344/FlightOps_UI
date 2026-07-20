@@ -15,6 +15,7 @@ import {
   useFlights,
   usePageTitle,
   useConfirm,
+  useAssistanceByUserId,
 } from '../../hooks';
 import { assistanceApi } from '../../api/passengerApi';
 import { ASSISTANCE_TYPES } from '../../types';
@@ -37,7 +38,9 @@ export default function SpecialAssistancePage() {
   usePageTitle('Special Assistance');
   const toast = useToast();
   const { user } = useAuth();
-  const { requests, loading, error, reload } = useAssistance();
+
+  // 🟢 Pass user?.userId to fetch only requests for this agent from the backend
+  const { requests, loading, error, reload } = useAssistanceByUserId(user?.userId);
   const { flights } = useFlights(undefined, false);
   const { confirmState, confirm, onConfirm, onCancel } = useConfirm();
 
@@ -47,21 +50,14 @@ export default function SpecialAssistancePage() {
   const [submitting, setSubmitting] = useState(false);
   const [actionBusy, setActionBusy] = useState(false);
 
-  // Bug 1: Filter counters where assignedAgentId === user.userId
-  // OR status === 'Requested' (unassigned — visible so agents can see queue)
-  const filteredRequests = useMemo(() => {
-    return requests.filter(
-      (r) =>
-        r.assignedAgentId === user?.userId ||
-        r.status === 'Requested',
-    );
-  }, [requests, user?.userId]);
-
-  const sortedRequests = [...filteredRequests].sort((a, b) => {
-    const aReq = a.status === 'Requested' ? 0 : 1;
-    const bReq = b.status === 'Requested' ? 0 : 1;
-    return aReq - bReq;
-  });
+  // Sort requests: Assigned (Active) first, Completed last
+  const sortedRequests = useMemo(() => {
+    return [...requests].sort((a, b) => {
+      const aVal = a.status === 'Assigned' ? 0 : 1;
+      const bVal = b.status === 'Assigned' ? 0 : 1;
+      return aVal - bVal;
+    });
+  }, [requests]);
 
   const openCreate = useCallback(() => {
     setForm(emptyForm());
@@ -83,11 +79,12 @@ export default function SpecialAssistancePage() {
     try {
       const payload: SpecialAssistanceRequest = {
         flightId: form.flightId,
+        userId: user?.userId ?? '', 
         passengerName: form.passengerName.trim(),
         assistanceType: form.assistanceType,
       };
       await assistanceApi.create(payload);
-      toast.success('Assistance request created');
+      toast.success('Assistance request created & assigned to you');
       setShowCreate(false);
       await reload();
     } catch (err) {
@@ -97,8 +94,6 @@ export default function SpecialAssistancePage() {
     }
   }, [form, toast, reload]);
 
-  // Bug 2: Remove "Assign to me" button. Only show "Complete" on requests
-  // where this agent is assigned (assignedAgentId === user.userId)
   const handleComplete = useCallback(
     async (id: string) => {
       const ok = await confirm({
@@ -124,7 +119,7 @@ export default function SpecialAssistancePage() {
     <>
       <PageHeader
         title="Special Assistance"
-        subtitle="Manage the special assistance request queue"
+        subtitle="Manage your assigned special assistance requests"
         actions={
           <Button variant="primary" onClick={openCreate}>
             <IconPlus size={18} className="me-1" />
@@ -140,7 +135,7 @@ export default function SpecialAssistancePage() {
         isEmpty={sortedRequests.length === 0}
         onRetry={reload}
         emptyTitle="No requests"
-        emptyMessage="There are no special assistance requests assigned to you or awaiting assignment."
+        emptyMessage="You have no special assistance requests."
       >
         <Table hover responsive className="table-sm align-middle">
           <thead>
@@ -159,27 +154,22 @@ export default function SpecialAssistancePage() {
                 <td className="fw-semibold">{r.passengerName}</td>
                 <td>{r.flightNumber}</td>
                 <td>{humanizeEnum(r.assistanceType)}</td>
-                <td>{r.assignedAgentName ?? '—'}</td>
+                <td>{r.assignedAgentName ?? user?.email ?? '—'}</td>
                 <td>
                   <StatusBadge status={r.status} />
                 </td>
                 <td className="text-end">
-                  {/* Bug 2: No "Assign to me" button. Show "Pending Assignment" badge or Complete button. */}
-                  {r.status === 'Requested' && (
-                    <span className="badge bg-warning text-dark">Pending Assignment</span>
+                  {r.status === 'Assigned' && (
+                    <Button
+                      size="sm"
+                      variant="outline-success"
+                      disabled={actionBusy}
+                      onClick={() => handleComplete(r.assistanceId)}
+                    >
+                      <IconCircleCheck size={16} className="me-1" />
+                      Complete
+                    </Button>
                   )}
-                  {r.status === 'Assigned' &&
-                    r.assignedAgentId === user?.userId && (
-                      <Button
-                        size="sm"
-                        variant="outline-success"
-                        disabled={actionBusy}
-                        onClick={() => handleComplete(r.assistanceId)}
-                      >
-                        <IconCircleCheck size={16} className="me-1" />
-                        Complete
-                      </Button>
-                    )}
                 </td>
               </tr>
             ))}

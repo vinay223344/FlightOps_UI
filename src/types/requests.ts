@@ -156,6 +156,7 @@ export interface GateStatusRequest {
 
 export interface SpecialAssistanceRequest {
   flightId: string;
+  userId: string;
   passengerName: string;
   assistanceType: AssistanceType;
 }
