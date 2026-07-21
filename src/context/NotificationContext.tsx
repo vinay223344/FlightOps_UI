@@ -38,7 +38,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     if (!isAuthenticated) return;
     setLoading(true);
     try {
-      const data = await notificationsApi.list();
+      const data = await notificationsApi.listUnread();
       if (mountedRef.current) setNotifications(data);
     } catch {
       // Polling errors are non-fatal — keep the last known list silently.

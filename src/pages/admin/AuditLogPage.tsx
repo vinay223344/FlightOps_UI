@@ -5,6 +5,7 @@ import { usePageTitle } from '../../hooks/usePageTitle';
 import { useAudit } from '../../hooks/useAudit';
 import type { AuditLogFilters } from '../../types';
 import { formatDateTime, fromDateTimeLocalInput } from '../../utils';
+import { Label } from 'recharts';
 
 interface FilterForm {
   userEmail: string;
@@ -18,8 +19,10 @@ const ENTITY_TYPES = [
   { label:'User', value:'User' }, { label:'Flight', value:'Flight' },
   { label:'TurnaroundPlan', value:'TurnaroundPlan' }, { label:'TurnaroundMilestone', value:'TurnaroundMilestone' },
   { label:'HandlingRequest', value:'HandlingRequest' }, { label:'EquipmentAllocation', value:'EquipmentAllocation' },
-  { label:'BaggageOperation', value:'BaggageOperation' },
-];
+  { label: 'EquipmentMaintenance', value: 'EquipmentMaintenance' },
+  { label:'BaggageOperation', value:'BaggageOperation' }, { label : 'MishandledBaggage', value: 'MishandledBaggage' },
+  { label: 'CheckInCounter', value: 'CheckInCounter' }, { label: 'BoardingGate', value: 'BoardingGate' },
+]
 
 const EMPTY: FilterForm = { userEmail: '', entityType: '', from: '', to: '' };
 
