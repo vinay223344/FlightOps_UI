@@ -1,0 +1,36 @@
+// -----------------------------------------------------------------------------
+// FlightOps app-specific utility classes — small helpers not worth repeating
+// as inline styles across pages.
+// -----------------------------------------------------------------------------
+@import 'tokens';
+
+.fo-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fo-section {
+  margin-bottom: 1.5rem;
+}
+
+.fo-surface {
+  background-color: var(--fo-surface);
+  border: 1px solid var(--fo-border-color);
+  border-radius: var(--fo-radius);
+}
+
+.fo-fade-in {
+  animation: fo-fade-in var(--fo-transition, 200ms) ease;
+}
+
+@keyframes fo-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

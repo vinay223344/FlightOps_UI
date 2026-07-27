@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Button, Form, Modal, Table } from 'react-bootstrap';
+import { Button, Card, Form, Modal, Table } from 'react-bootstrap';
 import { IconPlus } from '@tabler/icons-react';
 import { PageHeader, AsyncSection } from '../../components/common';
 import FlightSelect from '../../components/flight/FlightSelect';
@@ -13,6 +13,7 @@ import {
   formatTime,
   fromDateTimeLocalInput,
   getErrorMessage,
+  getStatusVariant,
   humanizeEnum,
   nowForInput,
 } from '../../utils';
@@ -128,47 +129,58 @@ export default function BoardingGatesPage() {
         emptyTitle="No gates"
         emptyMessage="No boarding gates have been opened yet."
       >
-        <Table hover responsive className="table-sm align-middle">
-          <thead>
-            <tr>
-              <th>Gate #</th>
-              <th>Terminal</th>
-              <th>Flight</th>
-              <th>Agent</th>
-              <th>Open</th>
-              <th>Close</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {gates.map((g) => (
-              <tr key={g.gateId}>
-                <td className="fw-semibold">{g.gateNumber}</td>
-                <td>{g.terminal}</td>
-                <td>{g.flightNumber}</td>
-                <td>{g.assignedAgentName ?? '—'}</td>
-                <td>{formatTime(g.openTime)}</td>
-                <td>{g.closeTime ? formatTime(g.closeTime) : '—'}</td>
-                <td>
-                  <Form.Select
-                    size="sm"
-                    value={g.status}
-                    disabled={statusBusy}
-                    onChange={(e) =>
-                      handleStatusChange(g.gateId, e.target.value as GateStatus)
-                    }
-                  >
-                    {GATE_STATUSES.map((s) => (
-                      <option key={s} value={s}>
-                        {humanizeEnum(s)}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <Card className="shadow-sm">
+          <Card.Header className="bg-white fw-semibold py-3">
+            Boarding Gate Status
+          </Card.Header>
+          <Card.Body className="p-0">
+            <Table hover responsive className="table-sm align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Gate #</th>
+                  <th>Terminal</th>
+                  <th>Flight</th>
+                  <th>Agent</th>
+                  <th>Open</th>
+                  <th>Close</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {gates.map((g) => (
+                  <tr key={g.gateId}>
+                    <td className="fw-semibold">{g.gateNumber}</td>
+                    <td>{g.terminal}</td>
+                    <td>{g.flightNumber}</td>
+                    <td>{g.assignedAgentName ?? '—'}</td>
+                    <td>{formatTime(g.openTime)}</td>
+                    <td>{g.closeTime ? formatTime(g.closeTime) : '—'}</td>
+                    <td>
+                      <Form.Select
+                        size="sm"
+                        className={`fo-status-select fo-status-select-${getStatusVariant(g.status)}`}
+                        value={g.status}
+                        disabled={statusBusy}
+                        onChange={(e) =>
+                          handleStatusChange(
+                            g.gateId,
+                            e.target.value as GateStatus,
+                          )
+                        }
+                      >
+                        {GATE_STATUSES.map((s) => (
+                          <option key={s} value={s}>
+                            {humanizeEnum(s)}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Card.Body>
+        </Card>
       </AsyncSection>
 
       <Modal show={showCreate} onHide={closeCreate} centered>

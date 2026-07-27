@@ -29,15 +29,12 @@ export const STATUS_VARIANT: Record<string, BsVariant> = {
   ReturnedToService: 'success',
   Assigned: 'success',
 
-  // warning (amber)
+  // warning (amber) — reserved for statuses that genuinely need attention.
+  // Neutral "waiting"/"in queue" statuses moved to secondary (grey) below so
+  // yellow isn't the dominant color across every table in the app.
   Delayed: 'warning',
   Maintenance: 'warning',
-  Received: 'warning',
-  Standby: 'warning',
-  InProgress: 'warning',
   InMaintenance: 'warning',
-  Requested: 'warning',
-  Pending: 'warning',
 
   // danger (red)
   Cancelled: 'danger',
@@ -54,14 +51,19 @@ export const STATUS_VARIANT: Record<string, BsVariant> = {
   Boarding: 'primary',
   OnShift: 'primary',
 
-  // secondary (grey)
+  // secondary (grey) — neutral, not-yet-actioned states.
   Departed: 'secondary',
   Closed: 'secondary',
   Released: 'secondary',
   ClosedUnresolved: 'secondary',
   Dismissed: 'secondary',
+  Received: 'secondary',
+  Standby: 'secondary',
+  Requested: 'secondary',
+  Pending: 'secondary',
 
-  // info (cyan)
+  // info (cyan) — active/in-flight work, distinct from the neutral greys above.
+  InProgress: 'info',
   Diverted: 'info',
   HoldRoom: 'info',
   Traced: 'info',

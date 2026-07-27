@@ -1,0 +1,8 @@
+// -----------------------------------------------------------------------------
+// FlightOps global stylesheet entry point.
+// Order matters: variable overrides must precede Bootstrap's own Sass source.
+// -----------------------------------------------------------------------------
+@import 'bootstrap-overrides';
+@import 'bootstrap/scss/bootstrap';
+@import 'components';
+@import 'utilities';

@@ -1,4 +1,9 @@
-import { IconLogout, IconPlaneTilt, IconUserCircle } from '@tabler/icons-react';
+import {
+  IconLogout,
+  IconMenu2,
+  IconPlaneTilt,
+  IconUserCircle,
+} from '@tabler/icons-react';
 import { Dropdown, Navbar } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import NotificationBell from '../components/notifications/NotificationBell';
@@ -11,7 +16,10 @@ interface TopNavbarProps {
   onToggleSidebar?: () => void;
 }
 
-export default function TopNavbar({ portalTitle }: TopNavbarProps) {
+export default function TopNavbar({
+  portalTitle,
+  onToggleSidebar,
+}: TopNavbarProps) {
   const { user, logout } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
@@ -23,12 +31,15 @@ export default function TopNavbar({ portalTitle }: TopNavbarProps) {
   };
 
   return (
-    <Navbar
-      bg="dark"
-      variant="dark"
-      className="px-3 shadow-sm"
-      style={{ height: 'var(--fo-navbar-height)' }}
-    >
+    <Navbar bg="dark" variant="dark" className="fo-navbar px-3 shadow-sm">
+      <button
+        type="button"
+        className="fo-sidebar-toggle btn btn-link text-white p-1 me-2 border-0"
+        onClick={onToggleSidebar}
+        aria-label="Toggle navigation menu"
+      >
+        <IconMenu2 size={22} />
+      </button>
       <Navbar.Brand className="fo-brand d-flex align-items-center gap-2 mb-0">
         <IconPlaneTilt size={22} />
         <span>FlightOps</span>

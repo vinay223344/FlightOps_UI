@@ -29,11 +29,14 @@ import { EQUIPMENT_TYPES } from '../../types';
 import { humanizeEnum, getErrorMessage } from '../../utils';
 import type { EquipmentStatus, EquipmentType, GroundEquipmentRequest } from '../../types';
 
+// Matches the app-wide status color tokens in src/styles/_tokens.scss
+// ($fo-success / $fo-primary / $fo-warning / $fo-danger) instead of ad hoc
+// Bootstrap hex values, so the chart stays visually consistent with badges.
 const STATUS_COLORS: Record<EquipmentStatus, string> = {
-  Available: '#198754',
-  Allocated: '#0d6efd',
-  Maintenance: '#ffc107',
-  OutOfService: '#dc3545',
+  Available: '#16a34a',
+  Allocated: '#2563eb',
+  Maintenance: '#b45309',
+  OutOfService: '#dc2626',
 };
 
 const emptyRegisterForm = (): GroundEquipmentRequest => ({
@@ -184,29 +187,39 @@ export default function GseDashboardPage() {
           {pieData.length > 0 && (
             <Col xs={12} lg={4}>
               <Card className="h-100 shadow-sm">
-                <Card.Body>
+                <Card.Body className="d-flex flex-column">
                   <Card.Title className="h6 mb-3">
                     Status distribution
                   </Card.Title>
-                  <ResponsiveContainer width="100%" height={260}>
-                    <PieChart>
-                      <Pie
-                        data={pieData}
-                        dataKey="value"
-                        nameKey="name"
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={90}
-                        label
-                      >
-                        {pieData.map((d) => (
-                          <Cell key={d.status} fill={STATUS_COLORS[d.status]} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
+                  <div className="flex-grow-1 d-flex align-items-center justify-content-center">
+                    <ResponsiveContainer width="100%" height={280}>
+                      <PieChart margin={{ top: 0, right: 8, bottom: 0, left: 8 }}>
+                        <Pie
+                          data={pieData}
+                          dataKey="value"
+                          nameKey="name"
+                          cx="50%"
+                          cy="42%"
+                          outerRadius="70%"
+                          label
+                        >
+                          {pieData.map((d) => (
+                            <Cell
+                              key={d.status}
+                              fill={STATUS_COLORS[d.status]}
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend
+                          layout="horizontal"
+                          verticalAlign="bottom"
+                          align="center"
+                          wrapperStyle={{ paddingTop: 12 }}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>

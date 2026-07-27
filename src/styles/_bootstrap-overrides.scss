@@ -1,0 +1,113 @@
+// -----------------------------------------------------------------------------
+// Bootstrap 5 Sass variable overrides — set BEFORE importing Bootstrap's own
+// Sass source so the whole framework (react-bootstrap included) picks up the
+// FlightOps brand theme instead of default Bootstrap blue.
+// -----------------------------------------------------------------------------
+@import 'tokens';
+
+// Theme colors
+$primary: $fo-primary;
+$secondary: $fo-secondary;
+$success: $fo-success;
+$warning: $fo-warning;
+$danger: $fo-danger;
+$info: $fo-info;
+$light: $fo-light;
+$dark: $fo-dark;
+
+$theme-colors: (
+  'primary': $primary,
+  'secondary': $secondary,
+  'success': $success,
+  'warning': $warning,
+  'danger': $danger,
+  'info': $info,
+  'light': $light,
+  'dark': $dark,
+);
+
+// Body / surfaces
+$body-bg: $fo-body-bg;
+$body-color: $fo-slate-800;
+$border-color: $fo-border-color;
+
+// Typography
+$font-family-sans-serif: $fo-font-sans;
+$font-size-base: 0.9375rem;
+$headings-font-weight: 700;
+$headings-color: $fo-navy-900;
+$link-decoration: none;
+$link-hover-color: $fo-blue-500;
+
+// Radii
+$border-radius: $fo-radius;
+$border-radius-sm: $fo-radius-sm;
+$border-radius-lg: $fo-radius-lg;
+$border-radius-xl: $fo-radius-lg;
+
+// Shadows
+$box-shadow-sm: $fo-shadow-xs;
+$box-shadow: $fo-shadow-sm;
+$box-shadow-lg: $fo-shadow;
+
+// Cards
+$card-border-width: 1px;
+$card-border-color: $fo-border-color;
+$card-border-radius: $fo-radius;
+$card-box-shadow: $fo-shadow-xs;
+$card-cap-bg: #fff;
+$card-spacer-y: 1.1rem;
+$card-spacer-x: 1.25rem;
+
+// Tables
+$table-border-color: $fo-border-color;
+$table-striped-bg-factor: 0.035;
+$table-hover-bg-factor: 0.05;
+$table-cell-padding-y: 0.65rem;
+$table-cell-padding-x: 0.85rem;
+
+// Buttons
+$btn-border-radius: $fo-radius-sm;
+$btn-font-weight: 600;
+$btn-focus-box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+$btn-padding-y: 0.45rem;
+$btn-padding-x: 1rem;
+
+// Forms
+$input-border-color: $fo-slate-300;
+$input-border-radius: $fo-radius-sm;
+$input-focus-border-color: $fo-blue-500;
+$input-focus-box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+$input-padding-y: 0.45rem;
+$input-padding-x: 0.75rem;
+
+// Navbar
+$navbar-padding-y: 0.6rem;
+
+// Modals
+$modal-content-border-radius: $fo-radius-lg;
+$modal-content-box-shadow-xs: $fo-shadow;
+$modal-header-padding-y: 1rem;
+$modal-header-padding-x: 1.25rem;
+$modal-inner-padding: 1.25rem;
+
+// Badges
+$badge-border-radius: 50rem;
+$badge-font-weight: 600;
+$badge-padding-y: 0.42em;
+$badge-padding-x: 0.65em;
+
+// Dropdowns
+$dropdown-border-radius: $fo-radius;
+$dropdown-box-shadow: $fo-shadow;
+$dropdown-link-hover-bg: $fo-slate-100;
+
+// Nav / pills
+$nav-link-font-weight: 600;
+
+// Breadcrumbs
+$breadcrumb-divider-color: $fo-slate-400;
+
+// Transitions (Bootstrap respects prefers-reduced-motion internally)
+$enable-transitions: true;
+$enable-shadows: true;

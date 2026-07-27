@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Badge, Button, Card, Col, Form, Modal, Row, Table } from 'react-bootstrap';
+import { Badge, Button, Col, Card, Form, Modal, Row, Table } from 'react-bootstrap';
 import { IconPlus } from '@tabler/icons-react';
 import { PageHeader, AsyncSection, StatusBadge } from '../../components/common';
 import FlightSelect from '../../components/flight/FlightSelect';
@@ -195,36 +195,51 @@ export default function HandlingRequestsPage() {
             : "Create a new request to get started."
         }
       >
-        <Table hover responsive size="sm" className="align-middle">
-          <thead>
-            <tr>
-              <th>Flight</th>
-              <th>Services</th>
-              <th>Special Requirements</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.map((r) => (
-              <tr key={r.requestId}>
-                <td className="fw-semibold">{r.flightNumber}</td>
-                <td>
-                  <div className="d-flex flex-wrap gap-1">
-                    {splitServiceTypes(r.serviceTypes).map((s) => (
-                      <Badge key={s} bg="info" text="dark" className="fw-normal">
-                        {s}
-                      </Badge>
-                    ))}
-                  </div>
-                </td>
-                <td>{r.specialRequirements || <span className="text-muted">—</span>}</td>
-                <td>
-                  <StatusBadge status={r.status} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <Card className="shadow-sm">
+          <Card.Header className="bg-white fw-semibold py-3">
+            Handling Request Services
+          </Card.Header>
+          <Card.Body className="p-0">
+            <Table hover responsive size="sm" className="align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Flight</th>
+                  <th>Services</th>
+                  <th>Special Requirements</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {requests.map((r) => (
+                  <tr key={r.requestId}>
+                    <td className="fw-semibold">{r.flightNumber}</td>
+                    <td>
+                      <div className="d-flex flex-wrap gap-2">
+                        {splitServiceTypes(r.serviceTypes).map((s) => (
+                          <Badge
+                            key={s}
+                            bg="primary"
+                            className="fo-service-chip fw-normal"
+                          >
+                            {s}
+                          </Badge>
+                        ))}
+                      </div>
+                    </td>
+                    <td>
+                      {r.specialRequirements || (
+                        <span className="text-muted">—</span>
+                      )}
+                    </td>
+                    <td>
+                      <StatusBadge status={r.status} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Card.Body>
+        </Card>
       </AsyncSection>
 
       <Modal show={showModal} onHide={closeModal} centered>

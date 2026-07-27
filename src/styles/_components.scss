@@ -1,0 +1,319 @@
+// -----------------------------------------------------------------------------
+// FlightOps component layer — replaces the old fo-* rules in index.css with a
+// richer set backed by design tokens. Class names are kept stable so no JSX
+// changes are required beyond the sidebar/navbar wiring described in the plan.
+// -----------------------------------------------------------------------------
+@import 'tokens';
+
+:root {
+  --fo-sidebar-width: #{$fo-sidebar-width};
+  --fo-navbar-height: #{$fo-navbar-height};
+  --fo-bg: #{$fo-body-bg};
+  --fo-surface: #{$fo-surface};
+  --fo-border-color: #{$fo-border-color};
+  --fo-text-muted: #{$fo-slate-500};
+  --fo-shadow-xs: #{$fo-shadow-xs};
+  --fo-shadow-sm: #{$fo-shadow-sm};
+  --fo-shadow: #{$fo-shadow};
+  --fo-shadow-lg: #{$fo-shadow-lg};
+  --fo-radius-sm: #{$fo-radius-sm};
+  --fo-radius: #{$fo-radius};
+  --fo-radius-lg: #{$fo-radius-lg};
+  --fo-transition: #{$fo-transition};
+  --fo-navy-900: #{$fo-navy-900};
+  --fo-navy-800: #{$fo-navy-800};
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--fo-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+// Scrollbar refinement (webkit only — progressive enhancement)
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: $fo-slate-300;
+  border-radius: 999px;
+  border: 2px solid var(--fo-bg);
+}
+
+// -----------------------------------------------------------------------------
+// App shell layout
+// -----------------------------------------------------------------------------
+.fo-shell {
+  min-height: 100vh;
+}
+
+.fo-navbar {
+  height: var(--fo-navbar-height);
+  background: linear-gradient(180deg, $fo-navy-900 0%, $fo-navy-800 100%);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.fo-brand {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+// Sticky + self-scrolling: the sidebar pins under the navbar and keeps its
+// own height at (viewport - navbar) regardless of how tall `.fo-main`'s
+// content grows, instead of scrolling away with the page or clipping short.
+.fo-sidebar {
+  width: var(--fo-sidebar-width);
+  min-width: var(--fo-sidebar-width);
+  background: linear-gradient(180deg, $fo-navy-900 0%, $fo-navy-800 100%);
+  color: $fo-slate-300;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  position: sticky;
+  top: var(--fo-navbar-height);
+  height: calc(100vh - var(--fo-navbar-height));
+  overflow-y: auto;
+}
+
+.fo-sidebar .nav-link {
+  color: $fo-slate-300;
+  border-radius: var(--fo-radius-sm);
+  margin: 0.15rem 0.6rem;
+  padding: 0.55rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color var(--fo-transition), color var(--fo-transition);
+}
+
+.fo-sidebar .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.fo-sidebar .nav-link.active {
+  background-color: $fo-primary;
+  color: #fff;
+  box-shadow: var(--fo-shadow-xs);
+}
+
+.fo-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 1.5rem;
+}
+
+@media (min-width: 992px) {
+  .fo-main {
+    padding: 1.75rem 2rem;
+  }
+}
+
+// Off-canvas sidebar (mobile / tablet, < lg) reuses the same visual treatment.
+.fo-sidebar-offcanvas .offcanvas-body {
+  padding: 0.5rem 0;
+}
+
+.fo-sidebar-toggle {
+  display: inline-flex;
+}
+
+@media (min-width: 992px) {
+  .fo-sidebar-toggle {
+    display: none;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Cards / stat cards
+// -----------------------------------------------------------------------------
+.card {
+  transition: box-shadow var(--fo-transition), transform var(--fo-transition);
+}
+
+.fo-stat-card {
+  border-left: 4px solid $fo-primary;
+  transition: transform var(--fo-transition), box-shadow var(--fo-transition);
+}
+
+.fo-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--fo-shadow) !important;
+}
+
+.fo-stat-card.fo-stat-success {
+  border-left-color: $fo-success;
+}
+.fo-stat-card.fo-stat-warning {
+  border-left-color: $fo-warning;
+}
+.fo-stat-card.fo-stat-danger {
+  border-left-color: $fo-danger;
+}
+.fo-stat-card.fo-stat-info {
+  border-left-color: $fo-info;
+}
+.fo-stat-card.fo-stat-secondary {
+  border-left-color: $fo-secondary;
+}
+
+// -----------------------------------------------------------------------------
+// Tables
+// -----------------------------------------------------------------------------
+// Every <Table responsive> in the app is auto-wrapped by react-bootstrap in a
+// .table-responsive div — style that wrapper once instead of touching all 21
+// call sites individually.
+.table-responsive,
+.fo-table-wrap {
+  border: 1px solid var(--fo-border-color);
+  border-radius: var(--fo-radius);
+  box-shadow: var(--fo-shadow-xs);
+  background-color: $fo-table-bg;
+}
+
+.table {
+  // Subtle off-white/blue-gray instead of plain white, per row.
+  --bs-table-bg: #{$fo-table-bg};
+  --bs-table-hover-bg: #{rgba($fo-primary, 0.06)};
+  margin-bottom: 0;
+}
+
+.table thead th {
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  color: $fo-slate-600;
+  background-color: $fo-table-header-bg;
+  border-bottom: 2px solid var(--fo-border-color);
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  transition: background-color var(--fo-transition-fast, 150ms ease);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+// A borderless table (e.g. dashboard mini-lists) still gets the soft tint
+// but skips the wrapper border/shadow treatment above.
+.table.table-borderless {
+  --bs-table-bg: transparent;
+  background-color: transparent;
+}
+
+// -----------------------------------------------------------------------------
+// Badges / status pills — soft tonal treatment (light tint + saturated text)
+// instead of solid, high-saturation Bootstrap fills. Overrides apply
+// regardless of the `text-dark`/`text-white` companion class react-bootstrap
+// adds, so StatusBadge/Badge call sites don't need to change.
+// -----------------------------------------------------------------------------
+.badge {
+  letter-spacing: 0.01em;
+  font-weight: 600;
+  padding-top: 0.4em;
+  padding-bottom: 0.4em;
+}
+
+@each $name, $tone in $fo-soft-status {
+  .badge.bg-#{$name} {
+    background-color: map-get($tone, bg) !important;
+    color: map-get($tone, fg) !important;
+  }
+}
+
+// Service chips (Handling Requests) — same soft tone, slightly tighter pill.
+.fo-service-chip {
+  border-radius: 50rem;
+  font-size: 0.75rem;
+  padding: 0.35em 0.75em;
+}
+
+// Inline status <select> (Boarding Gates) — tinted to match the same soft
+// status palette used by badges, so an editable status reads consistently
+// with read-only StatusBadge cells elsewhere.
+.fo-status-select {
+  font-weight: 600;
+  border-width: 1px;
+}
+
+@each $name, $tone in $fo-soft-status {
+  .fo-status-select-#{$name} {
+    background-color: map-get($tone, bg);
+    color: map-get($tone, fg);
+    border-color: transparent;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Buttons
+// -----------------------------------------------------------------------------
+.btn {
+  transition:
+    background-color var(--fo-transition),
+    border-color var(--fo-transition),
+    box-shadow var(--fo-transition),
+    transform var(--fo-transition-fast, 150ms ease);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+// -----------------------------------------------------------------------------
+// Forms
+// -----------------------------------------------------------------------------
+.form-control,
+.form-select {
+  transition: border-color var(--fo-transition), box-shadow var(--fo-transition);
+}
+
+// -----------------------------------------------------------------------------
+// Modals
+// -----------------------------------------------------------------------------
+.modal-content {
+  border: none;
+}
+
+.modal-header {
+  border-bottom-color: var(--fo-border-color);
+}
+
+.modal-footer {
+  border-top-color: var(--fo-border-color);
+}
+
+// -----------------------------------------------------------------------------
+// Misc app helpers
+// -----------------------------------------------------------------------------
+.fo-milestone-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.fo-cursor-pointer {
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+  }
+}
