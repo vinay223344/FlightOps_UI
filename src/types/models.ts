@@ -75,12 +75,14 @@ export interface HandlingRequestResponse {
   requestedById: string;
   requestedByName: string;
   status: RequestStatus;
+  createdAt: string;
 }
 
 export interface TurnaroundMilestoneResponse {
   milestoneId: string;
   planId: string;
   flightId: string;
+  flightNumber: string;
   milestoneType: MilestoneType;
   plannedTime: string;
   actualTime: string | null;

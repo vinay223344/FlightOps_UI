@@ -6,6 +6,11 @@ import type {
   RequestStatus,
 } from '../types';
 
+export interface HandlingRequestFilters {
+  status?: string;
+  date?: string;
+}
+
 export const handlingRequestsApi = {
   async list(airline?: string): Promise<HandlingRequestResponse[]> {
     const res = await api.get<ApiResponse<HandlingRequestResponse[]>>(
@@ -14,9 +19,14 @@ export const handlingRequestsApi = {
     );
     return res.data.data;
   },
-  async listByUserId(userId: string): Promise<HandlingRequestResponse[]> {
+  async listByUserId(userId: string, filters?: HandlingRequestFilters): Promise<HandlingRequestResponse[]> {
+    const params: Record<string, string> = {};
+    if (filters?.status) params.status = filters.status;
+    if (filters?.date) params.date = filters.date;
+
     const res = await api.get<ApiResponse<HandlingRequestResponse[]>>(
       `/api/handling-requests/byUser/${userId}`,
+      { params }
     );
     return res.data.data;
   },

@@ -7,7 +7,7 @@ import { formatDateTime, formatMinutes } from '../../utils';
 export default function TurnaroundViewPage() {
   usePageTitle('Turnaround View');
 
-  const { turnarounds, loading, error, reload } = useTurnarounds();
+  const { turnarounds, loading, error, reload } = useTurnarounds(true);
   // Bug 5: No item open by default
   const [activeKey, setActiveKey] = useState<string | null>(null);
 

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Badge, Button, Form, Modal, Table } from 'react-bootstrap';
+import { Badge, Button, Card, Col, Form, Modal, Row, Table } from 'react-bootstrap';
 import { IconPlus } from '@tabler/icons-react';
 import { PageHeader, AsyncSection, StatusBadge } from '../../components/common';
 import FlightSelect from '../../components/flight/FlightSelect';
@@ -15,17 +15,36 @@ import {
 import type { HandlingRequestDto } from '../../types';
 import { storageService } from '../../services/storageService';
 
+interface FilterForm {
+  status: string;
+  date: string;
+}
+
+const STATUS_OPTIONS = [
+  { label: 'All Statuses', value: '' },
+  { label: 'Pending', value: 'Received' },
+  { label: 'Confirmed', value: 'Confirmed' },
+  { label: 'Disputed', value: 'Disputed' },
+];
+
+const EMPTY_FILTERS: FilterForm = { status: '', date: '' };
+
 export default function HandlingRequestsPage() {
-  // Bug 7: page title says "Your Handling Requests"
   usePageTitle('Your Handling Requests');
   const toast = useToast();
 
   const currentUser = storageService.getUser();
   const userId = currentUser?.userId ?? '';
 
-  const { requests, loading, error, reload } = useHandlingRequests(userId);
+  // Filter form state
+  const [formState, setFormState] = useState<FilterForm>({ status: '', date: '' });
+  const [appliedFilters, setAppliedFilters] = useState<FilterForm>({ status: '', date: '' });
+
+  // Hook now receives appliedFilters -> triggers API call on change
+  const { requests, loading, error, reload } = useHandlingRequests(userId, appliedFilters);
   const { flights } = useFlights(undefined, false);
 
+  // Modal State
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [flightId, setFlightId] = useState('');
@@ -35,6 +54,21 @@ export default function HandlingRequestsPage() {
 
   const flightInvalid = touched && !flightId;
   const servicesInvalid = touched && selectedServices.length === 0;
+
+  // Filter handlers
+  const applyFilters = useCallback(() => {
+    // Creating a new object reference here guarantees useEffect in useAsyncData runs
+    setAppliedFilters({
+      status: formState.status,
+      date: formState.date,
+    });
+  }, [formState]);
+
+  const clearFilters = useCallback(() => {
+    const empty = { status: '', date: '' };
+    setFormState(empty);
+    setAppliedFilters(empty);
+  }, []);
 
   const resetForm = useCallback(() => {
     setFlightId('');
@@ -107,6 +141,47 @@ export default function HandlingRequestsPage() {
         }
       />
 
+      {/* Filter Card */}
+      <Card className="shadow-sm mb-3">
+        <Card.Body>
+          <Row className="g-3 align-items-end">
+            <Col md={4}>
+              <Form.Label>Status</Form.Label>
+              <Form.Select
+                value={formState.status}
+                onChange={(e) =>
+                  setFormState({ ...formState, status: e.target.value })
+                }
+              >
+                {STATUS_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </Form.Select>
+            </Col>
+            <Col md={4}>
+              <Form.Label>Date</Form.Label>
+              <Form.Control
+                type="date"
+                value={formState.date}
+                onChange={(e) =>
+                  setFormState({ ...formState, date: e.target.value })
+                }
+              />
+            </Col>
+            <Col md={4} className="d-flex gap-2">
+              <Button variant="primary" onClick={applyFilters}>
+                Apply
+              </Button>
+              <Button variant="light" onClick={clearFilters}>
+                Clear
+              </Button>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+
       <AsyncSection
         loading={loading}
         error={error}
@@ -114,13 +189,16 @@ export default function HandlingRequestsPage() {
         isEmpty={requests.length === 0}
         onRetry={reload}
         emptyTitle="No handling requests"
-        emptyMessage="Create a new request to get started."
+        emptyMessage={
+          appliedFilters.status || appliedFilters.date
+            ? "No handling requests match the selected filters."
+            : "Create a new request to get started."
+        }
       >
         <Table hover responsive size="sm" className="align-middle">
           <thead>
             <tr>
               <th>Flight</th>
-              {/* Bug 4: service chips use bg-info text-dark */}
               <th>Services</th>
               <th>Special Requirements</th>
               <th>Status</th>
@@ -131,7 +209,6 @@ export default function HandlingRequestsPage() {
               <tr key={r.requestId}>
                 <td className="fw-semibold">{r.flightNumber}</td>
                 <td>
-                  {/* Bug 4: each service as bg-info text-dark badge */}
                   <div className="d-flex flex-wrap gap-1">
                     {splitServiceTypes(r.serviceTypes).map((s) => (
                       <Badge key={s} bg="info" text="dark" className="fw-normal">
@@ -168,7 +245,6 @@ export default function HandlingRequestsPage() {
             )}
           </Form.Group>
 
-          {/* Bug 3: Only show milestone-mapped services (Ramp, Baggage, Cleaning, Catering, Fuelling) */}
           <Form.Group className="mb-3">
             <Form.Label>Services</Form.Label>
             <div className="d-flex flex-wrap gap-3">

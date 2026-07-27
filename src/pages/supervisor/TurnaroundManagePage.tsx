@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { IconPlus } from '@tabler/icons-react';
 import { Accordion, Badge, Button, Form, Modal, ProgressBar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -40,6 +40,17 @@ export default function TurnaroundManagePage() {
   const [target, setTarget] = useState<number | ''>('');
   const [submitting, setSubmitting] = useState(false);
   const [validated, setValidated] = useState(false);
+
+  // Filter turnarounds by status
+  const activePlans = useMemo(
+    () => turnarounds.filter((t) => t.status !== 'Completed'),
+    [turnarounds],
+  );
+
+  const completedPlans = useMemo(
+    () => turnarounds.filter((t) => t.status === 'Completed'),
+    [turnarounds],
+  );
 
   const resetForm = useCallback(() => {
     setFlightId('');
@@ -124,22 +135,131 @@ export default function TurnaroundManagePage() {
         }
       />
 
+      {/* Active Section */}
+      <h5 className="fw-bold mb-3">Active Turnarounds</h5>
       <AsyncSection
         loading={loading}
         error={error}
         hasData={turnarounds.length > 0}
-        isEmpty={turnarounds.length === 0}
+        isEmpty={activePlans.length === 0}
         onRetry={reload}
-        emptyTitle="No turnaround plans"
-        emptyMessage="Create a plan to start tracking a turnaround."
+        emptyTitle="No active turnarounds"
+        emptyMessage="There are currently no active turnaround plans."
       >
-        {/* Bug 5: Accordion view for turnaround plans */}
+        <Accordion
+          flush
+          activeKey={activeKey ?? undefined}
+          onSelect={(k) => setActiveKey(k as string | null)}
+          className="mb-4"
+        >
+          {activePlans.map((t) => {
+            const completed = t.milestones.filter(
+              (m) => m.status === 'Completed',
+            ).length;
+            const total = t.milestones.length;
+            const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            return (
+              <Accordion.Item eventKey={t.planId} key={t.planId}>
+                <Accordion.Header>
+                  <span className="fw-semibold me-2">{t.flightNumber}</span>
+                  {t.stand && (
+                    <span className="text-muted me-2 small">· Stand {t.stand}</span>
+                  )}
+                  <StatusBadge status={t.status} />
+                  <span className="ms-3 small text-muted">
+                    Target {formatMinutes(t.targetTurnaroundMinutes)}
+                  </span>
+                </Accordion.Header>
+                <Accordion.Body>
+                  <div className="mb-3">
+                    <div className="d-flex justify-content-between small mb-1">
+                      <span>Milestone progress</span>
+                      <span>{completed}/{total} completed</span>
+                    </div>
+                    <ProgressBar now={pct} label={`${pct}%`} className="mb-3" />
+                  </div>
+
+                  <table className="table table-sm align-middle mb-3">
+                    <thead className="table-light">
+                      <tr>
+                        <th>Milestone</th>
+                        <th>Planned</th>
+                        <th>Actual</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {t.milestones.map((m) => (
+                        <tr key={m.milestoneId}>
+                          <td className="fw-semibold">{m.milestoneType}</td>
+                          <td className="small text-muted">
+                            {formatDateTime(m.plannedTime)}
+                          </td>
+                          <td className="small">
+                            {m.actualTime ? (
+                              <span className={m.delayed || m.isDelayed ? 'text-danger' : ''}>
+                                {formatDateTime(m.actualTime)}
+                                {(m.delayed || m.isDelayed) && m.delayMinutes != null && (
+                                  <Badge bg="danger" className="ms-1 fw-normal">
+                                    +{m.delayMinutes}m
+                                  </Badge>
+                                )}
+                              </span>
+                            ) : (
+                              <span className="text-muted">—</span>
+                            )}
+                          </td>
+                          <td>
+                            <StatusBadge status={m.status} />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  <div className="d-flex gap-2 align-items-center">
+                    <Link
+                      to={`/supervisor/turnarounds/${t.planId}`}
+                      className="btn btn-sm btn-outline-primary"
+                    >
+                      View Detail
+                    </Link>
+                    {t.status !== 'Completed' && (
+                      <Button
+                        size="sm"
+                        variant="outline-success"
+                        disabled={busy}
+                        onClick={() => handleComplete(t.planId)}
+                      >
+                        Mark Complete
+                      </Button>
+                    )}
+                  </div>
+                </Accordion.Body>
+              </Accordion.Item>
+            );
+          })}
+        </Accordion>
+      </AsyncSection>
+
+      {/* Completed Section */}
+      <h5 className="fw-bold mb-3">Completed Turnarounds</h5>
+      <AsyncSection
+        loading={loading}
+        error={error}
+        hasData={turnarounds.length > 0}
+        isEmpty={completedPlans.length === 0}
+        onRetry={reload}
+        emptyTitle="No completed turnarounds"
+        emptyMessage="No turnaround plans have been completed yet."
+      >
         <Accordion
           flush
           activeKey={activeKey ?? undefined}
           onSelect={(k) => setActiveKey(k as string | null)}
         >
-          {turnarounds.map((t) => {
+          {completedPlans.map((t) => {
             const completed = t.milestones.filter(
               (m) => m.status === 'Completed',
             ).length;
@@ -264,7 +384,7 @@ export default function TurnaroundManagePage() {
                 </Button>
               ))}
             </div>
-            <Form.Control
+            {/* <Form.Control
               type="number"
               min={1}
               value={target}
@@ -275,7 +395,7 @@ export default function TurnaroundManagePage() {
             />
             <Form.Control.Feedback type="invalid">
               Enter a positive number of minutes.
-            </Form.Control.Feedback>
+            </Form.Control.Feedback> */}
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>

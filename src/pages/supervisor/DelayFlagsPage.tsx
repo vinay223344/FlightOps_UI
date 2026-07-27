@@ -32,6 +32,7 @@ export default function DelayFlagsPage() {
           <thead>
             <tr>
               <th>Milestone</th>
+              <th>Flight</th>
               <th>Planned</th>
               <th>Actual</th>
               <th>Delay</th>
@@ -44,6 +45,9 @@ export default function DelayFlagsPage() {
               <tr key={m.milestoneId}>
                 <td className="fw-semibold">
                   {humanizeEnum(m.milestoneType)}
+                </td>
+                <td>
+                  {m.flightNumber} 
                 </td>
                 <td>{formatTime(m.plannedTime)}</td>
                 <td>{formatTime(m.actualTime)}</td>

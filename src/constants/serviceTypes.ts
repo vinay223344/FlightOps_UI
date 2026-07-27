@@ -10,4 +10,4 @@ export const HANDLING_SERVICE_OPTIONS: string[] = [
 ];
 
 /** Common target turnaround presets (minutes) for the plan form. */
-export const TURNAROUND_PRESETS: number[] = [45, 60, 75, 90, 120];
+export const TURNAROUND_PRESETS: number[] = [60];
