@@ -75,7 +75,7 @@ export default function LoginPage() {
           <Col md={9} lg={7} xl={5}>
             <div className="text-center text-white mb-4">
               <IconPlaneTilt size={44} />
-              <h2 className="fw-bold mt-2 mb-0">FlightOps</h2>
+              <h2 className="text-white fw-bold mt-2 mb-0">FlightOps</h2>
               <p className="text-white-50 mb-0">
                 Airport Ground Operations Management
               </p>

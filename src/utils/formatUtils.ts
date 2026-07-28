@@ -42,11 +42,9 @@ export function joinServiceTypes(values: string[]): string {
 
 /** Backend serialises the boolean as `delayed`; keep `isDelayed` as fallback. */
 export function isMilestoneDelayed(
-  milestone: Pick<TurnaroundMilestoneResponse, 'delayed' | 'isDelayed' | 'status'>,
+  milestone: Pick<TurnaroundMilestoneResponse, 'status'>,
 ): boolean {
   return (
-    milestone.delayed === true ||
-    milestone.isDelayed === true ||
     milestone.status === 'Delayed'
   );
 }

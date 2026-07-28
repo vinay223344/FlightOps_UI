@@ -28,7 +28,7 @@ export default function RampDashboardPage() {
         <Row className="g-3">
           {turnarounds.map((t) => {
             const completed = t.milestones.filter(
-              (m) => m.status === 'Completed',
+              (m) => m.status === 'Completed' || m.status === 'Delayed',
             ).length;
             return (
               <Col md={6} key={t.planId}>

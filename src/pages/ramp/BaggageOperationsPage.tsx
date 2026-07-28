@@ -25,7 +25,7 @@ import { baggageApi } from '../../api/baggageApi';
 import { useToast } from '../../context/ToastContext';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { useBaggageOps } from '../../hooks/useBaggage';
-import { useFlights } from '../../hooks/useFlights';
+import { useFlights, useFlightsByHandlingRequestServiceType } from '../../hooks/useFlights';
 import { useConfirm } from '../../hooks/useConfirm';
 import { fromDateTimeLocalInput, nowForInput } from '../../utils/dateUtils';
 import { humanizeEnum, toPercent } from '../../utils/formatUtils';
@@ -40,7 +40,7 @@ export default function BaggageOperationsPage() {
   usePageTitle('Baggage Operations');
   const toast = useToast();
   const { operations, loading, error, reload } = useBaggageOps();
-  const { flights } = useFlights(undefined, false);
+  const { flights } = useFlightsByHandlingRequestServiceType('Baggage')
   const { confirmState, confirm, onConfirm, onCancel } = useConfirm();
 
   const [busy, setBusy] = useState(false);
@@ -48,7 +48,7 @@ export default function BaggageOperationsPage() {
   // New operation modal state
   const [showCreate, setShowCreate] = useState(false);
   const [flightId, setFlightId] = useState('');
-  const [direction, setDirection] = useState<Direction>('Inbound');
+  const [direction, setDirection] = useState<Direction>('Outbound');
   const [expected, setExpected] = useState('');
   const [startTime, setStartTime] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -60,7 +60,7 @@ export default function BaggageOperationsPage() {
 
   const openCreate = useCallback(() => {
     setFlightId('');
-    setDirection('Inbound');
+    setDirection('Outbound');
     setExpected('');
     setStartTime(nowForInput());
     setShowCreate(true);

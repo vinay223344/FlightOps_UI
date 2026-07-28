@@ -45,4 +45,11 @@ export const flightsApi = {
     );
     return res.data.data;
   },
+
+  async getByHandlingRequestServiceType(serviceType: string): Promise<FlightResponse[]> {
+    const res = await api.get<ApiResponse<FlightResponse[]>>(
+      `/api/flights/allByHandlingService`, {params: { serviceType },
+    });
+    return res.data.data;
+  }
 };

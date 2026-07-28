@@ -26,3 +26,15 @@ export function useFlight(id: string | undefined) {
   );
   return { flight: data, loading, error, reload };
 }
+
+export function useFlightsByHandlingRequestServiceType(serviceType: string, poll = true) {
+  const fetcher = useCallback(
+    () => flightsApi.getByHandlingRequestServiceType(serviceType),
+    [serviceType],
+  );
+  const { data, loading, error, reload } = useAsyncData<FlightResponse[]>(
+    fetcher,
+    { pollMs: poll ? FLIGHTS_POLL_MS : 0 },
+  );
+  return { flights: data ?? [], loading, error, reload };
+}

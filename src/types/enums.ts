@@ -84,12 +84,11 @@ export const MILESTONE_TYPES: MilestoneType[] = [
   'PushbackClearance',
 ];
 
-export type MilestoneStatus = 'Pending' | 'Completed' | 'Delayed' | 'Skipped';
+export type MilestoneStatus = 'Pending' | 'Completed' | 'Delayed';
 export const MILESTONE_STATUSES: MilestoneStatus[] = [
   'Pending',
   'Completed',
   'Delayed',
-  'Skipped',
 ];
 
 export type EquipmentType =
@@ -169,8 +168,8 @@ export const ASSISTANCE_STATUSES: AssistanceStatus[] = [
   'Completed',
 ];
 
-export type Direction = 'Inbound' | 'Outbound';
-export const DIRECTIONS: Direction[] = ['Inbound', 'Outbound'];
+export type Direction = 'Outbound';
+export const DIRECTIONS: Direction[] = ['Outbound'];
 
 export type OperationStatus = 'InProgress' | 'Completed' | 'Discrepancy';
 export const OPERATION_STATUSES: OperationStatus[] = [
