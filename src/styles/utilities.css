@@ -1,8 +1,7 @@
-// -----------------------------------------------------------------------------
-// FlightOps app-specific utility classes — small helpers not worth repeating
-// as inline styles across pages.
-// -----------------------------------------------------------------------------
-@import 'tokens';
+/*
+ * FlightOps app-specific utility classes — small helpers not worth repeating
+ * as inline styles across pages.
+ */
 
 .fo-truncate {
   overflow: hidden;
@@ -21,7 +20,7 @@
 }
 
 .fo-fade-in {
-  animation: fo-fade-in var(--fo-transition, 200ms) ease;
+  animation: fo-fade-in var(--fo-transition) ease;
 }
 
 @keyframes fo-fade-in {

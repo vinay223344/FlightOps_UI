@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Button, Form, Modal, Table } from 'react-bootstrap';
+import { Button, Card, Form, Modal, Table } from 'react-bootstrap';
 import { IconPlus } from '@tabler/icons-react';
 import { PageHeader, AsyncSection } from '../../components/common';
 import FlightSelect from '../../components/flight/FlightSelect';
@@ -13,6 +13,7 @@ import {
   formatTime,
   fromDateTimeLocalInput,
   getErrorMessage,
+  getStatusVariant,
   humanizeEnum,
   nowForInput,
 } from '../../utils';
@@ -128,50 +129,58 @@ export default function CheckInCountersPage() {
         emptyTitle="No counters"
         emptyMessage="No check-in counters have been opened yet."
       >
-        <Table hover responsive className="table-sm align-middle">
-          <thead>
-            <tr>
-              <th>Counter #</th>
-              <th>Terminal</th>
-              <th>Flight</th>
-              <th>Agent</th>
-              <th>Open</th>
-              <th>Close</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {counters.map((c) => (
-              <tr key={c.counterId}>
-                <td className="fw-semibold">{c.counterNumber}</td>
-                <td>{c.terminal}</td>
-                <td>{c.flightNumber}</td>
-                <td>{c.assignedAgentName ?? '—'}</td>
-                <td>{formatTime(c.openTime)}</td>
-                <td>{c.closeTime ? formatTime(c.closeTime) : '—'}</td>
-                <td>
-                  <Form.Select
-                    size="sm"
-                    value={c.status}
-                    disabled={statusBusy}
-                    onChange={(e) =>
-                      handleStatusChange(
-                        c.counterId,
-                        e.target.value as CounterStatus,
-                      )
-                    }
-                  >
-                    {COUNTER_STATUSES.map((s) => (
-                      <option key={s} value={s}>
-                        {humanizeEnum(s)}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <Card className="shadow-sm">
+          <Card.Header className="bg-white fw-semibold py-3">
+            Check-in Counter Status
+          </Card.Header>
+          <Card.Body className="p-0">
+            <Table hover responsive className="table-sm align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Counter #</th>
+                  <th>Terminal</th>
+                  <th>Flight</th>
+                  <th>Agent</th>
+                  <th>Open</th>
+                  <th>Close</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {counters.map((c) => (
+                  <tr key={c.counterId}>
+                    <td className="fw-semibold">{c.counterNumber}</td>
+                    <td>{c.terminal}</td>
+                    <td>{c.flightNumber}</td>
+                    <td>{c.assignedAgentName ?? '—'}</td>
+                    <td>{formatTime(c.openTime)}</td>
+                    <td>{c.closeTime ? formatTime(c.closeTime) : '—'}</td>
+                    <td>
+                      <Form.Select
+                        size="sm"
+                        className={`fo-status-select fo-status-select-${getStatusVariant(c.status)}`}
+                        value={c.status}
+                        disabled={statusBusy}
+                        onChange={(e) =>
+                          handleStatusChange(
+                            c.counterId,
+                            e.target.value as CounterStatus,
+                          )
+                        }
+                      >
+                        {COUNTER_STATUSES.map((s) => (
+                          <option key={s} value={s}>
+                            {humanizeEnum(s)}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Card.Body>
+        </Card>
       </AsyncSection>
 
       <Modal show={showCreate} onHide={closeCreate} centered>

@@ -30,6 +30,7 @@ export default function TurnaroundViewPage() {
         {/* Bug 5: Accordion instead of flat card grid */}
         <Accordion
           flush
+          className="fo-accordion"
           activeKey={activeKey ?? undefined}
           onSelect={(k) => setActiveKey(k as string | null)}
         >

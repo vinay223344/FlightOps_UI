@@ -1,0 +1,491 @@
+/*
+ * FlightOps component layer — app-specific classes (the fo-* namespace) on
+ * top of the re-themed Bootstrap in bootstrap-theme.css. Plain CSS, no
+ * preprocessor: color/shadow/radius values reference the custom properties
+ * defined in tokens.css.
+ */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--fo-body-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar refinement (webkit only — progressive enhancement) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--fo-slate-300);
+  border-radius: 999px;
+  border: 2px solid var(--fo-body-bg);
+}
+
+/* -----------------------------------------------------------------------
+   App shell layout
+   ----------------------------------------------------------------------- */
+.fo-shell {
+  min-height: 100vh;
+}
+
+.fo-navbar {
+  height: var(--fo-navbar-height);
+  background: linear-gradient(180deg, var(--fo-navy-900) 0%, var(--fo-navy-800) 100%);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.fo-brand {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* Sticky + self-scrolling: the sidebar pins under the navbar and keeps its
+   own height at (viewport - navbar) regardless of how tall `.fo-main`'s
+   content grows, instead of scrolling away with the page or clipping short. */
+.fo-sidebar {
+  width: var(--fo-sidebar-width);
+  min-width: var(--fo-sidebar-width);
+  background: linear-gradient(180deg, var(--fo-navy-900) 0%, var(--fo-navy-800) 100%);
+  color: var(--fo-slate-300);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  position: sticky;
+  top: var(--fo-navbar-height);
+  height: calc(100vh - var(--fo-navbar-height));
+  overflow-y: auto;
+}
+
+.fo-sidebar .nav-link {
+  color: var(--fo-slate-300);
+  border-radius: var(--fo-radius-sm);
+  margin: 0.15rem 0.6rem;
+  padding: 0.55rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color var(--fo-transition), color var(--fo-transition);
+}
+
+.fo-sidebar .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.fo-sidebar .nav-link.active {
+  background-color: var(--fo-primary);
+  color: #fff;
+  box-shadow: var(--fo-shadow-xs);
+}
+
+.fo-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 1.5rem;
+}
+
+@media (min-width: 992px) {
+  .fo-main {
+    padding: 1.75rem 2rem;
+  }
+}
+
+/* Off-canvas sidebar (mobile / tablet, < lg) reuses the same visual treatment. */
+.fo-sidebar-offcanvas .offcanvas-body {
+  padding: 0.5rem 0;
+}
+
+.fo-sidebar-toggle {
+  display: inline-flex;
+}
+
+@media (min-width: 992px) {
+  .fo-sidebar-toggle {
+    display: none;
+  }
+}
+
+/* -----------------------------------------------------------------------
+   Cards / stat cards
+   ----------------------------------------------------------------------- */
+.card {
+  transition: box-shadow var(--fo-transition), transform var(--fo-transition);
+}
+
+.fo-stat-card {
+  border-left: 4px solid var(--fo-primary);
+  transition: transform var(--fo-transition), box-shadow var(--fo-transition);
+}
+
+.fo-stat-card .card-body {
+  padding: 1.35rem 1.5rem;
+}
+
+.fo-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--fo-shadow) !important;
+}
+
+.fo-stat-card.fo-stat-success {
+  border-left-color: var(--fo-success);
+}
+/* Pending / Delayed / Maintenance stat cards (e.g. Coordinator dashboard's
+   "Pending" card) align with the same Sunshine Yellow used by warning
+   badges/chips/dropdowns elsewhere — only the left accent border and icon
+   pick up the color; the card body stays plain white like every other
+   stat card, never a yellow-filled background. */
+.fo-stat-card.fo-stat-warning {
+  border-left-color: var(--fo-sunshine-border);
+}
+.fo-stat-card.fo-stat-warning .text-warning {
+  color: var(--fo-sunshine-text) !important;
+}
+.fo-stat-card.fo-stat-danger {
+  border-left-color: var(--fo-danger);
+}
+.fo-stat-card.fo-stat-info {
+  border-left-color: var(--fo-info);
+}
+.fo-stat-card.fo-stat-secondary {
+  border-left-color: var(--fo-secondary);
+}
+
+/* Slightly larger label/value/hint type so KPI numbers read at a glance. */
+.fo-stat-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.fo-stat-value {
+  font-size: 2.1rem;
+}
+
+.fo-stat-hint {
+  font-size: 0.85rem;
+}
+
+/* -----------------------------------------------------------------------
+   Tables
+   ----------------------------------------------------------------------- */
+/* Every <Table responsive> in the app is auto-wrapped by react-bootstrap in
+   a .table-responsive div — style that wrapper once instead of touching all
+   21 call sites individually. */
+.table-responsive,
+.fo-table-wrap {
+  border: 1px solid var(--fo-border-color);
+  border-radius: var(--fo-radius);
+  box-shadow: var(--fo-shadow-xs);
+  background-color: var(--fo-table-bg);
+}
+
+.table {
+  /* Subtle off-white/blue-gray instead of plain white, per row. */
+  --bs-table-bg: var(--fo-table-bg);
+  --bs-table-hover-bg: rgba(37, 99, 235, 0.06);
+  margin-bottom: 0;
+}
+
+.table > :not(caption) > * > * {
+  padding: 0.65rem 0.85rem;
+}
+
+.table thead th {
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--fo-slate-600);
+  background-color: var(--fo-table-header-bg);
+  border-bottom: 2px solid var(--fo-border-color);
+  padding: 0.9rem 0.85rem;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  transition: background-color var(--fo-transition-fast);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* A borderless table (e.g. dashboard mini-lists) still gets the soft tint
+   but skips the wrapper border/shadow treatment above. */
+.table.table-borderless {
+  --bs-table-bg: transparent;
+  background-color: transparent;
+}
+
+/* -----------------------------------------------------------------------
+   Badges / status pills — soft tonal treatment (light tint + saturated
+   text) instead of solid, high-saturation Bootstrap fills. Overrides apply
+   regardless of the `text-dark`/`text-white` companion class react-bootstrap
+   adds, so StatusBadge/Badge call sites don't need to change.
+   ----------------------------------------------------------------------- */
+/* Status badges are made deliberately more prominent than action buttons
+   (see .fo-btn-action below) — larger type/padding so they read at a glance
+   next to a compact row of action buttons. */
+.badge {
+  letter-spacing: 0.01em;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 0.45em 0.8em;
+  border-radius: 50rem;
+}
+
+.badge.bg-primary {
+  background-color: var(--fo-soft-primary-bg) !important;
+  color: var(--fo-soft-primary-fg) !important;
+}
+.badge.bg-secondary {
+  background-color: var(--fo-soft-secondary-bg) !important;
+  color: var(--fo-soft-secondary-fg) !important;
+}
+.badge.bg-success {
+  background-color: var(--fo-soft-success-bg) !important;
+  color: var(--fo-soft-success-fg) !important;
+}
+.badge.bg-success-dark {
+  background-color: var(--fo-soft-success-dark-bg) !important;
+  color: var(--fo-soft-success-dark-fg) !important;
+}
+.badge.bg-warning {
+  background-color: var(--fo-soft-warning-bg) !important;
+  color: var(--fo-soft-warning-fg) !important;
+  border: 1px solid var(--fo-soft-warning-border);
+}
+.badge.bg-orange {
+  background-color: var(--fo-soft-orange-bg) !important;
+  color: var(--fo-soft-orange-fg) !important;
+}
+.badge.bg-danger {
+  background-color: var(--fo-soft-danger-bg) !important;
+  color: var(--fo-soft-danger-fg) !important;
+}
+.badge.bg-purple {
+  background-color: var(--fo-soft-purple-bg) !important;
+  color: var(--fo-soft-purple-fg) !important;
+}
+.badge.bg-info {
+  background-color: var(--fo-soft-info-bg) !important;
+  color: var(--fo-soft-info-fg) !important;
+}
+.badge.bg-light {
+  background-color: var(--fo-soft-light-bg) !important;
+  color: var(--fo-soft-light-fg) !important;
+}
+.badge.bg-dark {
+  background-color: var(--fo-soft-dark-bg) !important;
+  color: var(--fo-soft-dark-fg) !important;
+}
+
+/* Notification count badge is a genuine alert — keep it solid, saturated
+   red instead of the soft tonal treatment above, so it stays highly visible. */
+.fo-notif-badge.badge.bg-danger {
+  background-color: var(--fo-red-600) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+/* Service chips (Handling Requests) — same soft tone, slightly tighter pill. */
+.fo-service-chip {
+  border-radius: 50rem;
+  font-size: 0.75rem;
+  padding: 0.35em 0.75em;
+}
+
+/* Inline status <select> (Boarding Gates — the reference implementation for
+   status color handling app-wide) — tinted to match the same soft status
+   palette used by badges, and sized up slightly so an editable status is as
+   prominent as a read-only StatusBadge cell elsewhere. Every module that
+   surfaces an editable status dropdown should reuse this same class pair:
+   `fo-status-select fo-status-select-{getStatusVariant(status)}`. */
+.fo-status-select {
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  border-width: 1px;
+  border-radius: 50rem;
+}
+
+.fo-status-select-primary {
+  background-color: var(--fo-soft-primary-bg);
+  color: var(--fo-soft-primary-fg);
+  border-color: transparent;
+}
+.fo-status-select-secondary {
+  background-color: var(--fo-soft-secondary-bg);
+  color: var(--fo-soft-secondary-fg);
+  border-color: transparent;
+}
+.fo-status-select-success {
+  background-color: var(--fo-soft-success-bg);
+  color: var(--fo-soft-success-fg);
+  border-color: transparent;
+}
+.fo-status-select-success-dark {
+  background-color: var(--fo-soft-success-dark-bg);
+  color: var(--fo-soft-success-dark-fg);
+  border-color: transparent;
+}
+.fo-status-select-warning {
+  background-color: var(--fo-soft-warning-bg);
+  color: var(--fo-soft-warning-fg);
+  border-color: var(--fo-soft-warning-border);
+}
+.fo-status-select-orange {
+  background-color: var(--fo-soft-orange-bg);
+  color: var(--fo-soft-orange-fg);
+  border-color: transparent;
+}
+.fo-status-select-danger {
+  background-color: var(--fo-soft-danger-bg);
+  color: var(--fo-soft-danger-fg);
+  border-color: transparent;
+}
+.fo-status-select-purple {
+  background-color: var(--fo-soft-purple-bg);
+  color: var(--fo-soft-purple-fg);
+  border-color: transparent;
+}
+.fo-status-select-info {
+  background-color: var(--fo-soft-info-bg);
+  color: var(--fo-soft-info-fg);
+  border-color: transparent;
+}
+.fo-status-select-light {
+  background-color: var(--fo-soft-light-bg);
+  color: var(--fo-soft-light-fg);
+  border-color: transparent;
+}
+.fo-status-select-dark {
+  background-color: var(--fo-soft-dark-bg);
+  color: var(--fo-soft-dark-fg);
+  border-color: transparent;
+}
+
+/* -----------------------------------------------------------------------
+   Buttons — shared modern hover feel (elevation + smooth transition +
+   subtle scale). Color behavior itself is set per-variant in
+   bootstrap-theme.css; this just adds the motion/depth every button shares.
+   ----------------------------------------------------------------------- */
+.btn {
+  transition:
+    background-color var(--fo-transition),
+    border-color var(--fo-transition),
+    color var(--fo-transition),
+    box-shadow var(--fo-transition),
+    transform var(--fo-transition-fast);
+}
+
+.btn:hover:not(:disabled) {
+  box-shadow: var(--fo-shadow-xs);
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Row/card action buttons (Edit, View, Delete, Assign, Approve, Reject, ...)
+   are all rendered with Bootstrap's `size="sm"` — tightened further so they
+   stay compact and don't visually compete with the now-larger status
+   badges/selects next to them. Applies globally; no per-page changes needed. */
+.btn-sm,
+.btn-group-sm > .btn {
+  --bs-btn-padding-y: 0.2rem;
+  --bs-btn-padding-x: 0.55rem;
+  --bs-btn-font-size: 0.8rem;
+}
+
+/* Opt-in class for icon-only / very tight action buttons in dense tables. */
+.fo-btn-action {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* -----------------------------------------------------------------------
+   Accordion (Turnaround sections) — modern, subtle item borders instead of
+   the flush/flat default, so each turnaround plan reads as a distinct card.
+   ----------------------------------------------------------------------- */
+.fo-accordion .accordion-item {
+  border: 1px solid var(--fo-border-color) !important;
+  border-radius: var(--fo-radius) !important;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  box-shadow: var(--fo-shadow-xs);
+  transition: box-shadow var(--fo-transition), border-color var(--fo-transition);
+}
+
+.fo-accordion .accordion-item:last-of-type {
+  margin-bottom: 0;
+}
+
+.fo-accordion .accordion-item:hover {
+  border-color: var(--fo-slate-300) !important;
+  box-shadow: var(--fo-shadow-sm);
+}
+
+.fo-accordion .accordion-button {
+  font-weight: 600;
+}
+
+/* -----------------------------------------------------------------------
+   Forms
+   ----------------------------------------------------------------------- */
+.form-control,
+.form-select {
+  transition: border-color var(--fo-transition), box-shadow var(--fo-transition);
+}
+
+/* -----------------------------------------------------------------------
+   Modals
+   ----------------------------------------------------------------------- */
+.modal-content {
+  border: none;
+}
+
+.modal-header {
+  border-bottom-color: var(--fo-border-color);
+}
+
+.modal-footer {
+  border-top-color: var(--fo-border-color);
+}
+
+/* -----------------------------------------------------------------------
+   Misc app helpers
+   ----------------------------------------------------------------------- */
+.fo-milestone-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.fo-cursor-pointer {
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+  }
+}

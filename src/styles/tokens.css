@@ -1,0 +1,137 @@
+/*
+ * FlightOps design tokens — plain CSS custom properties.
+ * No Sass build step: these are consumed directly by bootstrap-theme.css
+ * (which re-themes the precompiled Bootstrap 5.3 CSS via its own CSS custom
+ * properties) and by components.css / utilities.css below.
+ */
+
+:root {
+  /* Brand palette */
+  --fo-navy-900: #0f172a;
+  --fo-navy-800: #16213e;
+  --fo-blue-500: #3b82f6;
+  --fo-blue-600: #2563eb;
+  --fo-blue-700: #1d4ed8;
+  --fo-blue-800: #1e40af;
+
+  --fo-slate-50: #f8fafc;
+  --fo-slate-100: #f1f5f9;
+  --fo-slate-200: #e2e8f0;
+  --fo-slate-300: #cbd5e1;
+  --fo-slate-400: #94a3b8;
+  --fo-slate-500: #64748b;
+  --fo-slate-600: #475569;
+  --fo-slate-700: #334155;
+  --fo-slate-800: #1e293b;
+
+  --fo-green-600: #16a34a;
+  --fo-green-700: #15803d;
+  --fo-green-800: #166534;
+
+  /* Muted gold/amber (base theme "warning" color, e.g. Bootstrap $warning) —
+     kept distinct from the pale badge/select tones below. */
+  --fo-amber-100: #fef3c7;
+  --fo-amber-300: #fcd34d;
+  --fo-amber-600: #b45309;
+  --fo-amber-700: #92400e;
+  --fo-amber-800: #78350f;
+
+  --fo-red-600: #dc2626;
+  --fo-red-700: #b91c1c;
+  --fo-red-800: #991b1b;
+
+  --fo-cyan-600: #0891b2;
+  --fo-cyan-700: #0e7490;
+  --fo-cyan-800: #155e75;
+
+  /* Extra status hues beyond Bootstrap's 8 defaults — orange (pending) and
+     purple (on hold) are distinct buckets from amber (delayed/warning) and
+     secondary (neutral), per the app-wide status color system. */
+  --fo-orange-600: #c2410c;
+  --fo-orange-700: #9a3412;
+  --fo-orange-800: #7c2d12;
+
+  --fo-purple-600: #7c3aed;
+  --fo-purple-700: #6d28d9;
+  --fo-purple-800: #5b21b6;
+
+  /* Semantic theme colors */
+  --fo-primary: var(--fo-blue-600);
+  --fo-secondary: var(--fo-slate-500);
+  --fo-success: var(--fo-green-600);
+  --fo-warning: var(--fo-amber-600);
+  --fo-danger: var(--fo-red-600);
+  --fo-info: var(--fo-cyan-600);
+
+  /* Surfaces */
+  --fo-body-bg: #f4f6fb;
+  --fo-surface: #ffffff;
+  --fo-border-color: var(--fo-slate-200);
+  --fo-table-bg: #f9fafc;
+  --fo-table-header-bg: var(--fo-slate-100);
+
+  /* Typography */
+  --fo-font-sans: 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica,
+    Arial, sans-serif;
+
+  /* Radii + shadows */
+  --fo-radius-sm: 0.4rem;
+  --fo-radius: 0.6rem;
+  --fo-radius-lg: 0.9rem;
+
+  --fo-shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --fo-shadow-sm:
+    0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --fo-shadow: 0 4px 12px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(15, 23, 42, 0.06);
+  --fo-shadow-lg:
+    0 12px 28px rgba(15, 23, 42, 0.12), 0 3px 8px rgba(15, 23, 42, 0.06);
+
+  /* Motion */
+  --fo-transition-fast: 150ms ease;
+  --fo-transition: 200ms ease;
+
+  /* Layout */
+  --fo-sidebar-width: 260px;
+  --fo-navbar-height: 60px;
+
+  /* Soft/tonal status palette — light tinted background + saturated text,
+     used for badges/status pills instead of solid, high-saturation fills. */
+  --fo-soft-primary-bg: rgba(37, 99, 235, 0.12);
+  --fo-soft-primary-fg: #1d4ed8;
+  --fo-soft-secondary-bg: rgba(100, 116, 139, 0.14);
+  --fo-soft-secondary-fg: #475569;
+  --fo-soft-success-bg: rgba(22, 163, 74, 0.14);
+  --fo-soft-success-fg: #15803d;
+  /* "Sunshine Yellow" — the single standardized color for Delayed / Pending /
+     Maintenance across the whole app (status dropdowns, badges, chips,
+     cards, tables, dashboards, notifications, reports). Solid fill (not a
+     translucent tint) so it reads identically regardless of the surface it
+     sits on. Reference: #FFFD37 / rgb(255, 253, 55). */
+  --fo-sunshine-yellow: #fffd37;
+  --fo-sunshine-border: #eab308;
+  --fo-sunshine-text: #78350f;
+  --fo-soft-warning-bg: var(--fo-sunshine-yellow);
+  --fo-soft-warning-border: var(--fo-sunshine-border);
+  --fo-soft-warning-fg: var(--fo-sunshine-text);
+  --fo-soft-danger-bg: rgba(220, 38, 38, 0.12);
+  --fo-soft-danger-fg: #b91c1c;
+  --fo-soft-info-bg: rgba(8, 145, 178, 0.14);
+  --fo-soft-info-fg: #0e7490;
+  --fo-soft-light-bg: #f1f5f9;
+  --fo-soft-light-fg: #475569;
+  --fo-soft-dark-bg: rgba(15, 23, 42, 0.08);
+  --fo-soft-dark-fg: #0f172a;
+
+  /* Dark green (completed/closed) — a deeper, more "finalized" green than
+     --fo-soft-success-* rather than a re-use of the same active-state hue. */
+  --fo-soft-success-dark-bg: rgba(22, 101, 52, 0.16);
+  --fo-soft-success-dark-fg: #14532d;
+
+  /* Orange (pending / awaiting action) */
+  --fo-soft-orange-bg: rgba(194, 65, 12, 0.14);
+  --fo-soft-orange-fg: #9a3412;
+
+  /* Purple (on hold) */
+  --fo-soft-purple-bg: rgba(124, 58, 237, 0.12);
+  --fo-soft-purple-fg: #6d28d9;
+}

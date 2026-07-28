@@ -22,15 +22,15 @@ export default function StatCard({
     <Card className={`fo-stat-card fo-stat-${accent} h-100 shadow-sm`}>
       <Card.Body className="d-flex align-items-center justify-content-between">
         <div>
-          <div className="text-muted text-uppercase small fw-semibold">
+          <div className="fo-stat-label text-muted text-uppercase fw-semibold">
             {label}
           </div>
-          <div className="fs-3 fw-bold lh-1 mt-1">{value}</div>
-          {hint && <div className="text-muted small mt-1">{hint}</div>}
+          <div className="fo-stat-value fw-bold lh-1 mt-1">{value}</div>
+          {hint && <div className="fo-stat-hint text-muted mt-1">{hint}</div>}
         </div>
         {IconCmp && (
           <div className={`text-${accent} opacity-75`}>
-            <IconCmp size={40} stroke={1.5} />
+            <IconCmp size={44} stroke={1.5} />
           </div>
         )}
       </Card.Body>

@@ -1,12 +1,12 @@
 import { useCallback, useState } from 'react';
-import { Button, Form, Modal, Table } from 'react-bootstrap';
+import { Button, Card, Form, Modal, Table } from 'react-bootstrap';
 import { IconPlus } from '@tabler/icons-react';
-import { AsyncSection, PageHeader, StatusBadge } from '../../components/common';
+import { AsyncSection, PageHeader } from '../../components/common';
 import { useToast } from '../../context/ToastContext';
 import { useEquipment } from '../../hooks';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { equipmentApi } from '../../api/gseApi';
-import { getErrorMessage, humanizeEnum } from '../../utils';
+import { getErrorMessage, getStatusVariant, humanizeEnum } from '../../utils';
 import {
   EQUIPMENT_STATUSES,
   EQUIPMENT_TYPES,
@@ -103,46 +103,51 @@ export default function EquipmentListPage() {
         emptyTitle="No equipment"
         emptyMessage="Register your first piece of equipment to get started."
       >
-        <Table hover responsive className="align-middle table-sm">
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Registration</th>
-              <th>Location</th>
-              <th style={{ width: 200 }}>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {equipment.map((e) => (
-              <tr key={e.equipmentId}>
-                <td>{humanizeEnum(e.type)}</td>
-                <td className="fw-semibold">{e.registrationNumber}</td>
-                <td>{e.currentLocation || '—'}</td>
-                <td>
-                  <div className="d-flex align-items-center gap-2">
-                    <StatusBadge status={e.status} />
-                    <Form.Select
-                      size="sm"
-                      value={e.status}
-                      onChange={(ev) =>
-                        handleStatusChange(
-                          e.equipmentId,
-                          ev.target.value as EquipmentStatus,
-                        )
-                      }
-                    >
-                      {EQUIPMENT_STATUSES.map((s) => (
-                        <option key={s} value={s}>
-                          {humanizeEnum(s)}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <Card className="shadow-sm">
+          <Card.Header className="bg-white fw-semibold py-3">
+            Equipment Status
+          </Card.Header>
+          <Card.Body className="p-0">
+            <Table hover responsive className="align-middle table-sm mb-0">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Registration</th>
+                  <th>Location</th>
+                  <th style={{ width: 200 }}>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {equipment.map((e) => (
+                  <tr key={e.equipmentId}>
+                    <td>{humanizeEnum(e.type)}</td>
+                    <td className="fw-semibold">{e.registrationNumber}</td>
+                    <td>{e.currentLocation || '—'}</td>
+                    <td>
+                      <Form.Select
+                        size="sm"
+                        className={`fo-status-select fo-status-select-${getStatusVariant(e.status)}`}
+                        value={e.status}
+                        onChange={(ev) =>
+                          handleStatusChange(
+                            e.equipmentId,
+                            ev.target.value as EquipmentStatus,
+                          )
+                        }
+                      >
+                        {EQUIPMENT_STATUSES.map((s) => (
+                          <option key={s} value={s}>
+                            {humanizeEnum(s)}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Card.Body>
+        </Card>
       </AsyncSection>
 
       <Modal show={showModal} onHide={closeModal} centered>

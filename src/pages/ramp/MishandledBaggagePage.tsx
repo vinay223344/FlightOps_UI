@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+import { Button, Card, Form, Modal } from 'react-bootstrap';
 import { IconPlus, IconReportAnalytics } from '@tabler/icons-react';
 import { AsyncSection, PageHeader } from '../../components/common';
 import FlightSelect from '../../components/flight/FlightSelect';
@@ -11,6 +11,7 @@ import { useFlights } from '../../hooks/useFlights';
 import { formatDateTime } from '../../utils/dateUtils';
 import { humanizeEnum } from '../../utils/formatUtils';
 import { getErrorMessage } from '../../utils/errorUtils';
+import { getStatusVariant } from '../../utils/statusColorUtils';
 import { MISHANDLED_STATUSES, MISHANDLED_TYPES } from '../../types';
 import type { MishandledStatus, MishandledType } from '../../types';
 
@@ -98,50 +99,58 @@ export default function MishandledBaggagePage() {
         emptyTitle="No mishandled baggage"
         emptyMessage="No mishandled baggage has been reported."
       >
-        <div className="table-responsive">
-          <table className="table table-hover table-sm align-middle">
-            <thead>
-              <tr>
-                <th>Bag Tag</th>
-                <th>Passenger</th>
-                <th>Flight</th>
-                <th>Type</th>
-                <th>Reported</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((r) => (
-                <tr key={r.mishandleId}>
-                  <td>{r.bagTagNumber}</td>
-                  <td>{r.passengerName}</td>
-                  <td>{r.flightNumber}</td>
-                  <td>{humanizeEnum(r.mishandleType)}</td>
-                  <td>{formatDateTime(r.reportedDate)}</td>
-                  <td>
-                    <Form.Select
-                      size="sm"
-                      value={r.status}
-                      disabled={savingId === r.mishandleId}
-                      onChange={(e) =>
-                        handleStatusChange(
-                          r.mishandleId,
-                          e.target.value as MishandledStatus,
-                        )
-                      }
-                    >
-                      {MISHANDLED_STATUSES.map((s) => (
-                        <option key={s} value={s}>
-                          {humanizeEnum(s)}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Card className="shadow-sm">
+          <Card.Header className="bg-white fw-semibold py-3">
+            Mishandled Baggage Status
+          </Card.Header>
+          <Card.Body className="p-0">
+            <div className="table-responsive">
+              <table className="table table-hover table-sm align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Bag Tag</th>
+                    <th>Passenger</th>
+                    <th>Flight</th>
+                    <th>Type</th>
+                    <th>Reported</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {records.map((r) => (
+                    <tr key={r.mishandleId}>
+                      <td>{r.bagTagNumber}</td>
+                      <td>{r.passengerName}</td>
+                      <td>{r.flightNumber}</td>
+                      <td>{humanizeEnum(r.mishandleType)}</td>
+                      <td>{formatDateTime(r.reportedDate)}</td>
+                      <td>
+                        <Form.Select
+                          size="sm"
+                          className={`fo-status-select fo-status-select-${getStatusVariant(r.status)}`}
+                          value={r.status}
+                          disabled={savingId === r.mishandleId}
+                          onChange={(e) =>
+                            handleStatusChange(
+                              r.mishandleId,
+                              e.target.value as MishandledStatus,
+                            )
+                          }
+                        >
+                          {MISHANDLED_STATUSES.map((s) => (
+                            <option key={s} value={s}>
+                              {humanizeEnum(s)}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card.Body>
+        </Card>
       </AsyncSection>
 
       <Modal show={showCreate} onHide={() => setShowCreate(false)} centered>

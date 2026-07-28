@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Button, Form, Modal, Table } from 'react-bootstrap';
+import { Button, Card, Form, Modal, Table } from 'react-bootstrap';
 import { IconPlus } from '@tabler/icons-react';
 import { AsyncSection, PageHeader } from '../../components/common';
 import { useToast } from '../../context/ToastContext';
@@ -12,6 +12,7 @@ import {
   formatTime,
   fromDateTimeLocalInput,
   getErrorMessage,
+  getStatusVariant,
   humanizeEnum,
   nowForInput,
 } from '../../utils';
@@ -141,54 +142,60 @@ export default function FlightSchedulePage() {
         emptyTitle="No flights"
         emptyMessage="No flights have been scheduled yet."
       >
-        <Table hover responsive className="table-sm align-middle">
-          <thead>
-            <tr>
-              <th>Flight</th>
-              <th>Route</th>
-              <th>Aircraft</th>
-              <th>STA</th>
-              <th>STD</th>
-              <th>Stand</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {flights.map((f) => (
-              <tr key={f.flightId}>
-                <td className="fw-semibold">
-                  {f.flightNumber}
-                </td>
-                <td>
-                  {f.origin} → {f.destination}
-                </td>
-                <td>{f.aircraftType}</td>
-                <td>{formatTime(f.scheduledArrival)}</td>
-                <td>{formatTime(f.scheduledDeparture)}</td>
-                <td>{f.stand ?? '—'}</td>
-                <td style={{ minWidth: 140 }}>
-                  <Form.Select
-                    size="sm"
-                    value={f.status}
-                    disabled={statusBusy}
-                    onChange={(e) =>
-                      handleStatusChange(
-                        f.flightId,
-                        e.target.value as FlightStatus,
-                      )
-                    }
-                  >
-                    {FLIGHT_STATUSES.map((s) => (
-                      <option key={s} value={s}>
-                        {humanizeEnum(s)}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <Card className="shadow-sm">
+          <Card.Header className="bg-white fw-semibold py-3">
+            Flight Status
+          </Card.Header>
+          <Card.Body className="p-0">
+            <Table hover responsive className="table-sm align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Flight</th>
+                  <th>Route</th>
+                  <th>Aircraft</th>
+                  <th>STA</th>
+                  <th>STD</th>
+                  <th>Stand</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {flights.map((f) => (
+                  <tr key={f.flightId}>
+                    <td className="fw-semibold">{f.flightNumber}</td>
+                    <td>
+                      {f.origin} → {f.destination}
+                    </td>
+                    <td>{f.aircraftType}</td>
+                    <td>{formatTime(f.scheduledArrival)}</td>
+                    <td>{formatTime(f.scheduledDeparture)}</td>
+                    <td>{f.stand ?? '—'}</td>
+                    <td style={{ minWidth: 160 }}>
+                      <Form.Select
+                        size="sm"
+                        className={`fo-status-select fo-status-select-${getStatusVariant(f.status)}`}
+                        value={f.status}
+                        disabled={statusBusy}
+                        onChange={(e) =>
+                          handleStatusChange(
+                            f.flightId,
+                            e.target.value as FlightStatus,
+                          )
+                        }
+                      >
+                        {FLIGHT_STATUSES.map((s) => (
+                          <option key={s} value={s}>
+                            {humanizeEnum(s)}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Card.Body>
+        </Card>
       </AsyncSection>
 
       <Modal show={showCreate} onHide={closeCreate} centered>

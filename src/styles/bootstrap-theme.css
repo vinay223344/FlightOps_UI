@@ -1,0 +1,316 @@
+/*
+ * Re-themes the precompiled Bootstrap 5.3 CSS (bootstrap.min.css) using the
+ * same CSS custom properties Bootstrap's own components read from — no Sass
+ * recompilation required. Global variant colors (--bs-primary etc.) drive
+ * utility classes like .bg-primary/.text-primary; per-component blocks below
+ * (.btn-*, .card, .table, ...) override the literal values Bootstrap bakes
+ * into each component at build time, since those are not var-driven upstream.
+ */
+
+:root {
+  /* Theme colors */
+  --bs-primary: var(--fo-primary);
+  --bs-primary-rgb: 37, 99, 235;
+  --bs-secondary: var(--fo-secondary);
+  --bs-secondary-rgb: 100, 116, 139;
+  --bs-success: var(--fo-success);
+  --bs-success-rgb: 22, 163, 74;
+  --bs-warning: var(--fo-warning);
+  --bs-warning-rgb: 180, 83, 9;
+  --bs-danger: var(--fo-danger);
+  --bs-danger-rgb: 220, 38, 38;
+  --bs-info: var(--fo-info);
+  --bs-info-rgb: 8, 145, 178;
+  --bs-light: var(--fo-slate-50);
+  --bs-light-rgb: 248, 250, 252;
+  --bs-dark: var(--fo-navy-900);
+  --bs-dark-rgb: 15, 23, 42;
+
+  --bs-body-bg: var(--fo-body-bg);
+  --bs-body-color: var(--fo-slate-800);
+  --bs-body-font-size: 0.9375rem;
+  --bs-border-color: var(--fo-border-color);
+  --bs-border-radius: var(--fo-radius);
+  --bs-border-radius-sm: var(--fo-radius-sm);
+  --bs-border-radius-lg: var(--fo-radius-lg);
+  --bs-border-radius-xl: var(--fo-radius-lg);
+  --bs-box-shadow: var(--fo-shadow);
+  --bs-box-shadow-sm: var(--fo-shadow-xs);
+  --bs-box-shadow-lg: var(--fo-shadow-lg);
+  --bs-font-sans-serif: var(--fo-font-sans);
+  --bs-link-color: var(--fo-primary);
+  --bs-link-color-rgb: 37, 99, 235;
+  --bs-link-hover-color: var(--fo-blue-700);
+  --bs-link-hover-color-rgb: 29, 78, 216;
+  --bs-heading-color: var(--fo-navy-900);
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-weight: 700;
+}
+
+/* -----------------------------------------------------------------------
+   Buttons — solid variants keep their own hover/active shade (no color
+   reversal); focus rings tie back to each variant's own hue.
+   ----------------------------------------------------------------------- */
+.btn {
+  --bs-btn-border-radius: var(--fo-radius-sm);
+  --bs-btn-font-weight: 600;
+  --bs-btn-padding-y: 0.45rem;
+  --bs-btn-padding-x: 1rem;
+}
+
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--fo-blue-600);
+  --bs-btn-border-color: var(--fo-blue-600);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--fo-blue-700);
+  --bs-btn-hover-border-color: var(--fo-blue-700);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--fo-blue-800);
+  --bs-btn-active-border-color: var(--fo-blue-800);
+  --bs-btn-focus-shadow-rgb: 37, 99, 235;
+  --bs-btn-disabled-bg: var(--fo-blue-600);
+  --bs-btn-disabled-border-color: var(--fo-blue-600);
+}
+
+.btn-secondary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--fo-slate-500);
+  --bs-btn-border-color: var(--fo-slate-500);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--fo-slate-600);
+  --bs-btn-hover-border-color: var(--fo-slate-600);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--fo-slate-700);
+  --bs-btn-active-border-color: var(--fo-slate-700);
+  --bs-btn-focus-shadow-rgb: 100, 116, 139;
+  --bs-btn-disabled-bg: var(--fo-slate-500);
+  --bs-btn-disabled-border-color: var(--fo-slate-500);
+}
+
+.btn-success {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--fo-green-600);
+  --bs-btn-border-color: var(--fo-green-600);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--fo-green-700);
+  --bs-btn-hover-border-color: var(--fo-green-700);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--fo-green-800);
+  --bs-btn-active-border-color: var(--fo-green-800);
+  --bs-btn-focus-shadow-rgb: 22, 163, 74;
+  --bs-btn-disabled-bg: var(--fo-green-600);
+  --bs-btn-disabled-border-color: var(--fo-green-600);
+}
+
+.btn-warning {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--fo-amber-600);
+  --bs-btn-border-color: var(--fo-amber-600);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--fo-amber-700);
+  --bs-btn-hover-border-color: var(--fo-amber-700);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--fo-amber-800);
+  --bs-btn-active-border-color: var(--fo-amber-800);
+  --bs-btn-focus-shadow-rgb: 180, 83, 9;
+  --bs-btn-disabled-bg: var(--fo-amber-600);
+  --bs-btn-disabled-border-color: var(--fo-amber-600);
+}
+
+.btn-danger {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--fo-red-600);
+  --bs-btn-border-color: var(--fo-red-600);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--fo-red-700);
+  --bs-btn-hover-border-color: var(--fo-red-700);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--fo-red-800);
+  --bs-btn-active-border-color: var(--fo-red-800);
+  --bs-btn-focus-shadow-rgb: 220, 38, 38;
+  --bs-btn-disabled-bg: var(--fo-red-600);
+  --bs-btn-disabled-border-color: var(--fo-red-600);
+}
+
+.btn-info {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--fo-cyan-600);
+  --bs-btn-border-color: var(--fo-cyan-600);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--fo-cyan-700);
+  --bs-btn-hover-border-color: var(--fo-cyan-700);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--fo-cyan-800);
+  --bs-btn-active-border-color: var(--fo-cyan-800);
+  --bs-btn-focus-shadow-rgb: 8, 145, 178;
+  --bs-btn-disabled-bg: var(--fo-cyan-600);
+  --bs-btn-disabled-border-color: var(--fo-cyan-600);
+}
+
+/* Outline buttons: keep the light background on hover/active instead of
+   flipping to a solid fill with reversed (white) text. Just a soft tint,
+   a touch of elevation, and a smooth transition — see components.css for
+   the shared hover transform/shadow rules applied to every .btn. */
+.btn-outline-primary {
+  --bs-btn-color: var(--fo-blue-600);
+  --bs-btn-border-color: var(--fo-blue-600);
+  --bs-btn-hover-color: var(--fo-blue-700);
+  --bs-btn-hover-bg: rgba(37, 99, 235, 0.08);
+  --bs-btn-hover-border-color: var(--fo-blue-700);
+  --bs-btn-active-color: var(--fo-blue-700);
+  --bs-btn-active-bg: rgba(37, 99, 235, 0.15);
+  --bs-btn-active-border-color: var(--fo-blue-700);
+  --bs-btn-focus-shadow-rgb: 37, 99, 235;
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: var(--fo-slate-600);
+  --bs-btn-border-color: var(--fo-slate-400);
+  --bs-btn-hover-color: var(--fo-slate-700);
+  --bs-btn-hover-bg: rgba(100, 116, 139, 0.1);
+  --bs-btn-hover-border-color: var(--fo-slate-500);
+  --bs-btn-active-color: var(--fo-slate-700);
+  --bs-btn-active-bg: rgba(100, 116, 139, 0.18);
+  --bs-btn-active-border-color: var(--fo-slate-500);
+  --bs-btn-focus-shadow-rgb: 100, 116, 139;
+}
+
+.btn-outline-success {
+  --bs-btn-color: var(--fo-green-600);
+  --bs-btn-border-color: var(--fo-green-600);
+  --bs-btn-hover-color: var(--fo-green-700);
+  --bs-btn-hover-bg: rgba(22, 163, 74, 0.08);
+  --bs-btn-hover-border-color: var(--fo-green-700);
+  --bs-btn-active-color: var(--fo-green-700);
+  --bs-btn-active-bg: rgba(22, 163, 74, 0.15);
+  --bs-btn-active-border-color: var(--fo-green-700);
+  --bs-btn-focus-shadow-rgb: 22, 163, 74;
+}
+
+.btn-outline-warning {
+  --bs-btn-color: var(--fo-amber-700);
+  --bs-btn-border-color: var(--fo-amber-600);
+  --bs-btn-hover-color: var(--fo-amber-800);
+  --bs-btn-hover-bg: rgba(180, 83, 9, 0.1);
+  --bs-btn-hover-border-color: var(--fo-amber-700);
+  --bs-btn-active-color: var(--fo-amber-800);
+  --bs-btn-active-bg: rgba(180, 83, 9, 0.18);
+  --bs-btn-active-border-color: var(--fo-amber-700);
+  --bs-btn-focus-shadow-rgb: 180, 83, 9;
+}
+
+.btn-outline-danger {
+  --bs-btn-color: var(--fo-red-600);
+  --bs-btn-border-color: var(--fo-red-600);
+  --bs-btn-hover-color: var(--fo-red-700);
+  --bs-btn-hover-bg: rgba(220, 38, 38, 0.08);
+  --bs-btn-hover-border-color: var(--fo-red-700);
+  --bs-btn-active-color: var(--fo-red-700);
+  --bs-btn-active-bg: rgba(220, 38, 38, 0.15);
+  --bs-btn-active-border-color: var(--fo-red-700);
+  --bs-btn-focus-shadow-rgb: 220, 38, 38;
+}
+
+.btn-outline-info {
+  --bs-btn-color: var(--fo-cyan-700);
+  --bs-btn-border-color: var(--fo-cyan-600);
+  --bs-btn-hover-color: var(--fo-cyan-800);
+  --bs-btn-hover-bg: rgba(8, 145, 178, 0.1);
+  --bs-btn-hover-border-color: var(--fo-cyan-700);
+  --bs-btn-active-color: var(--fo-cyan-800);
+  --bs-btn-active-bg: rgba(8, 145, 178, 0.18);
+  --bs-btn-active-border-color: var(--fo-cyan-700);
+  --bs-btn-focus-shadow-rgb: 8, 145, 178;
+}
+
+/* -----------------------------------------------------------------------
+   Cards — always a clean white surface regardless of --bs-body-bg, with
+   the app's radius/shadow/spacing scale.
+   ----------------------------------------------------------------------- */
+.card {
+  --bs-card-bg: #fff;
+  --bs-card-border-color: var(--fo-border-color);
+  --bs-card-border-radius: var(--fo-radius);
+  --bs-card-box-shadow: var(--fo-shadow-xs);
+  --bs-card-cap-bg: #fff;
+  --bs-card-spacer-y: 1.1rem;
+  --bs-card-spacer-x: 1.25rem;
+}
+
+/* -----------------------------------------------------------------------
+   Tables
+   ----------------------------------------------------------------------- */
+.table {
+  --bs-table-border-color: var(--fo-border-color);
+}
+
+/* -----------------------------------------------------------------------
+   Modals
+   ----------------------------------------------------------------------- */
+.modal-content {
+  --bs-modal-border-radius: var(--fo-radius-lg);
+  --bs-modal-header-padding-y: 1rem;
+  --bs-modal-header-padding-x: 1.25rem;
+}
+
+/* -----------------------------------------------------------------------
+   Badges
+   ----------------------------------------------------------------------- */
+.badge {
+  --bs-badge-border-radius: 50rem;
+  --bs-badge-font-weight: 600;
+  --bs-badge-padding-y: 0.42em;
+  --bs-badge-padding-x: 0.65em;
+}
+
+/* -----------------------------------------------------------------------
+   Dropdowns / nav / navbar / breadcrumb
+   ----------------------------------------------------------------------- */
+.dropdown-menu {
+  --bs-dropdown-border-radius: var(--fo-radius);
+  --bs-dropdown-box-shadow: var(--fo-shadow);
+  --bs-dropdown-link-hover-bg: var(--fo-slate-100);
+}
+
+.nav-link {
+  --bs-nav-link-font-weight: 600;
+}
+
+.navbar {
+  --bs-navbar-padding-y: 0.6rem;
+}
+
+.breadcrumb {
+  --bs-breadcrumb-divider-color: var(--fo-slate-400);
+}
+
+/* -----------------------------------------------------------------------
+   Accordion (Turnaround sections)
+   ----------------------------------------------------------------------- */
+.accordion {
+  --bs-accordion-border-color: var(--fo-border-color);
+  --bs-accordion-border-radius: var(--fo-radius);
+  --bs-accordion-active-bg: rgba(37, 99, 235, 0.06);
+  --bs-accordion-active-color: var(--fo-navy-900);
+  --bs-accordion-btn-focus-box-shadow: 0 0 0 0.15rem rgba(37, 99, 235, 0.15);
+}
+
+/* -----------------------------------------------------------------------
+   Forms — Bootstrap 5.3 doesn't expose these as CSS custom properties, so
+   they're set as plain declarations rather than variable overrides.
+   ----------------------------------------------------------------------- */
+.form-control,
+.form-select {
+  border-color: var(--fo-slate-300);
+  border-radius: var(--fo-radius-sm);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--fo-blue-500);
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+}

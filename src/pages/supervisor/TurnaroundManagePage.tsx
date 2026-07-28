@@ -150,7 +150,7 @@ export default function TurnaroundManagePage() {
           flush
           activeKey={activeKey ?? undefined}
           onSelect={(k) => setActiveKey(k as string | null)}
-          className="mb-4"
+          className="fo-accordion mb-4"
         >
           {activePlans.map((t) => {
             const completed = t.milestones.filter(
@@ -256,6 +256,7 @@ export default function TurnaroundManagePage() {
       >
         <Accordion
           flush
+          className="fo-accordion"
           activeKey={activeKey ?? undefined}
           onSelect={(k) => setActiveKey(k as string | null)}
         >

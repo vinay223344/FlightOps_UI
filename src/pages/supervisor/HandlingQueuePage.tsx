@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { IconCircleCheck } from '@tabler/icons-react';
-import { Badge, Button, Table } from 'react-bootstrap';
+import { Badge, Button, Card, Table } from 'react-bootstrap';
 import { handlingRequestsApi } from '../../api';
 import {
   AsyncSection,
@@ -101,55 +101,65 @@ export default function HandlingQueuePage() {
         emptyTitle="No pending requests"
         emptyMessage="There are no requests awaiting review."
       >
-        <Table hover responsive className="align-middle table-sm mb-4">
-          <thead>
-            <tr>
-              <th>Flight</th>
-              {/* Bug 3: service chips use bg-info text-dark */}
-              <th>Services</th>
-              <th>Requested By</th>
-              <th className="text-end">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pending.map((r) => (
-              <tr key={r.requestId}>
-                <td className="fw-semibold">{r.flightNumber}</td>
-                <td>
-                  <div className="d-flex flex-wrap gap-1">
-                    {splitServiceTypes(r.serviceTypes).map((s) => (
-                      <Badge key={s} bg="info" text="dark" className="fw-normal">
-                        {s}
-                      </Badge>
-                    ))}
-                  </div>
-                </td>
-                <td>{r.requestedByName}</td>
-                <td className="text-end">
-                  <div className="d-flex gap-2 justify-content-end">
-                    <Button
-                      size="sm"
-                      variant="success"
-                      disabled={busy}
-                      onClick={() => handleConfirmRequest(r.requestId)}
-                    >
-                      <IconCircleCheck size={16} className="me-1" />
-                      Confirm
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="danger"
-                      disabled={busy}
-                      onClick={() => handleDispute(r.requestId)}
-                    >
-                      Dispute
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <Card className="shadow-sm mb-4">
+          <Card.Header className="bg-white fw-semibold py-3">
+            Handling Request Services
+          </Card.Header>
+          <Card.Body className="p-0">
+            <Table hover responsive className="align-middle table-sm mb-0">
+              <thead>
+                <tr>
+                  <th>Flight</th>
+                  <th>Services</th>
+                  <th>Requested By</th>
+                  <th className="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pending.map((r) => (
+                  <tr key={r.requestId}>
+                    <td className="fw-semibold">{r.flightNumber}</td>
+                    <td>
+                      <div className="d-flex flex-wrap gap-2">
+                        {splitServiceTypes(r.serviceTypes).map((s) => (
+                          <Badge
+                            key={s}
+                            bg="primary"
+                            className="fo-service-chip fw-normal"
+                          >
+                            {s}
+                          </Badge>
+                        ))}
+                      </div>
+                    </td>
+                    <td>{r.requestedByName}</td>
+                    <td className="text-end">
+                      <div className="d-flex gap-2 justify-content-end">
+                        <Button
+                          size="sm"
+                          variant="success"
+                          disabled={busy}
+                          onClick={() => handleConfirmRequest(r.requestId)}
+                        >
+                          <IconCircleCheck size={16} className="me-1" />
+                          Confirm
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="danger"
+                          disabled={busy}
+                          onClick={() => handleDispute(r.requestId)}
+                        >
+                          Dispute
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Card.Body>
+        </Card>
       </AsyncSection>
 
       <h5 className="fw-bold mb-3">All Requests</h5>
@@ -162,36 +172,47 @@ export default function HandlingQueuePage() {
         emptyTitle="No handling requests"
         emptyMessage="No handling requests have been submitted."
       >
-        <Table hover responsive className="align-middle table-sm">
-          <thead>
-            <tr>
-              <th>Flight</th>
-              <th>Services</th>
-              <th>Requested By</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.map((r) => (
-              <tr key={r.requestId}>
-                <td className="fw-semibold">{r.flightNumber}</td>
-                <td>
-                  <div className="d-flex flex-wrap gap-1">
-                    {splitServiceTypes(r.serviceTypes).map((s) => (
-                      <Badge key={s} bg="info" text="dark" className="fw-normal">
-                        {s}
-                      </Badge>
-                    ))}
-                  </div>
-                </td>
-                <td>{r.requestedByName}</td>
-                <td>
-                  <StatusBadge status={r.status} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <Card className="shadow-sm">
+          <Card.Header className="bg-white fw-semibold py-3">
+            Handling Request Services
+          </Card.Header>
+          <Card.Body className="p-0">
+            <Table hover responsive className="align-middle table-sm mb-0">
+              <thead>
+                <tr>
+                  <th>Flight</th>
+                  <th>Services</th>
+                  <th>Requested By</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {requests.map((r) => (
+                  <tr key={r.requestId}>
+                    <td className="fw-semibold">{r.flightNumber}</td>
+                    <td>
+                      <div className="d-flex flex-wrap gap-2">
+                        {splitServiceTypes(r.serviceTypes).map((s) => (
+                          <Badge
+                            key={s}
+                            bg="primary"
+                            className="fo-service-chip fw-normal"
+                          >
+                            {s}
+                          </Badge>
+                        ))}
+                      </div>
+                    </td>
+                    <td>{r.requestedByName}</td>
+                    <td>
+                      <StatusBadge status={r.status} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Card.Body>
+        </Card>
       </AsyncSection>
 
       <ConfirmDialog

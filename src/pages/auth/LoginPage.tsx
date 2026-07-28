@@ -153,7 +153,7 @@ export default function LoginPage() {
                         style={{ fontSize: '0.7rem' }}
                         onClick={() => {
                           setEmail(a.email);
-                          setPassword('Password@123');
+                          setPassword('root');
                         }}
                         disabled={submitting}
                       >

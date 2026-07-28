@@ -22,8 +22,8 @@ export default function NotificationBell() {
           <Badge
             bg="danger"
             pill
-            className="position-absolute top-0 start-100 translate-middle"
-            style={{ fontSize: '0.6rem' }}
+            className="fo-notif-badge position-absolute top-0 start-100 translate-middle"
+            style={{ fontSize: '0.65rem' }}
           >
             {unreadCount > 99 ? '99+' : unreadCount}
           </Badge>
