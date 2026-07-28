@@ -141,7 +141,7 @@ export default function LoginPage() {
                 <hr className="my-3" />
                 <div className="small text-muted">
                   <div className="fw-semibold mb-1">
-                    Demo accounts (password: Password@123)
+                    Demo accounts
                   </div>
                   <div className="d-flex flex-wrap gap-1">
                     {DEMO_ACCOUNTS.map((a) => (
@@ -153,7 +153,7 @@ export default function LoginPage() {
                         style={{ fontSize: '0.7rem' }}
                         onClick={() => {
                           setEmail(a.email);
-                          setPassword('root');
+                          setPassword('Password@123');
                         }}
                         disabled={submitting}
                       >
