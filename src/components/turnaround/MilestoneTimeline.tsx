@@ -27,8 +27,6 @@ function statusIcon(status: MilestoneStatus, delayed: boolean) {
     return <IconClockExclamation size={22} className="text-warning" />;
   if (status === 'Delayed')
     return <IconClockExclamation size={22} className="text-warning" />;
-  if (status === 'Skipped')
-    return <IconCircleMinus size={22} className="text-secondary" />;
   return <IconCircle size={22} className="text-muted" />;
 }
 

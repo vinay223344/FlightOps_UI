@@ -18,11 +18,13 @@ import {
   humanizeEnum,
 } from '../../utils';
 import type { EquipmentMaintenanceRequest } from '../../types';
+import { useAuth } from '../../context/AuthContext';
 
 export default function MaintenancePage() {
   usePageTitle('Maintenance');
   const toast = useToast();
   const { records, loading, error, reload } = useMaintenance();
+  const { user } = useAuth();
   // Bug 3: Only Available equipment can be reported for maintenance
   const { equipment: availableEquipment } = useAvailableEquipment();
   const { confirmState, confirm, onConfirm, onCancel } = useConfirm();
@@ -147,7 +149,8 @@ export default function MaintenancePage() {
                   <StatusBadge status={r.status} />
                 </td>
                 <td className="text-end">
-                  {r.status !== 'ReturnedToService' && (
+                  {/* Show Resolve button only if not resolved AND reportedById matches current user's ID */}
+                  {r.status !== 'ReturnedToService' && user?.userId === r.reportedById && (
                     <Button
                       size="sm"
                       variant="outline-success"

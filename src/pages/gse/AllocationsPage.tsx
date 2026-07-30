@@ -25,10 +25,14 @@ import {
   nowForInput,
 } from '../../utils';
 import type { EquipmentAllocationRequest } from '../../types';
+import { useAuth } from '../../context/AuthContext';
 
 export default function AllocationsPage() {
   usePageTitle('Allocations');
   const toast = useToast();
+
+  const {user} = useAuth();
+
   const {
     allocations,
     loading,
@@ -155,7 +159,7 @@ export default function AllocationsPage() {
               <th />
             </tr>
           </thead>
-          <tbody>
+          <tbody >
             {allocations.map((a) => (
               <tr key={a.allocationId}>
                 <td>
@@ -174,7 +178,8 @@ export default function AllocationsPage() {
                   <StatusBadge status={a.status} />
                 </td>
                 <td className="text-end">
-                  {a.status !== 'Released' && (
+                  {/* Check status AND verify user ID matches allocatedById */}
+                  {a.status !== 'Released' && user?.userId === a.allocatedById && (
                     <Button
                       size="sm"
                       variant="outline-danger"

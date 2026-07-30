@@ -1,8 +1,6 @@
 /**
  * Centralised persistence for auth artefacts.
- *  - access token  → sessionStorage (cleared when the tab closes)
- *  - refresh token → localStorage   (persists across sessions)
- *  - user object   → localStorage   (fast rehydrate without decoding the JWT)
+ * All items are stored in localStorage for seamless multi-tab state sync.
  */
 import type { AuthUser } from '../types';
 
@@ -12,10 +10,10 @@ const USER_KEY = 'flightops.user';
 
 export const storageService = {
   getAccessToken(): string | null {
-    return sessionStorage.getItem(ACCESS_TOKEN_KEY);
+    return localStorage.getItem(ACCESS_TOKEN_KEY);
   },
   setAccessToken(token: string): void {
-    sessionStorage.setItem(ACCESS_TOKEN_KEY, token);
+    localStorage.setItem(ACCESS_TOKEN_KEY, token);
   },
 
   getRefreshToken(): string | null {
@@ -45,7 +43,7 @@ export const storageService = {
   },
 
   clear(): void {
-    sessionStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
   },

@@ -62,6 +62,13 @@ export const allocationsApi = {
     return res.data.data;
   },
 
+  async getByUser(userId: string): Promise<EquipmentAllocationResponse[]> {
+    const res = await api.get<ApiResponse<EquipmentAllocationResponse[]>>(
+      `/api/allocations/user/${userId}`,
+    );
+    return res.data.data; 
+  },
+
   async listByFlight(flightId: string): Promise<EquipmentAllocationResponse[]> {
     const res = await api.get<ApiResponse<EquipmentAllocationResponse[]>>(
       `/api/allocations/flight/${flightId}`,

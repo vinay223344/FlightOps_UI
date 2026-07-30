@@ -23,8 +23,9 @@ export function useAvailableEquipment() {
   return { equipment: data ?? [], loading, error, reload };
 }
 
-export function useAllocations() {
-  const fetcher = useCallback(() => allocationsApi.list(), []);
+export function useAllocations(userId?: string) {
+  const fetcher = useCallback(() =>
+    userId ? allocationsApi.getByUser(userId) : allocationsApi.list(), []);
   const { data, loading, error, reload } = useAsyncData<
     EquipmentAllocationResponse[]
   >(fetcher);
