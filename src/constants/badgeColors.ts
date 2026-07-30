@@ -10,8 +10,11 @@
 export type BsVariant =
   | 'success'
   | 'success-dark'
+  | 'lime'
   | 'danger'
   | 'warning'
+  | 'pending'
+  | 'delayed'
   | 'orange'
   | 'primary'
   | 'secondary'
@@ -24,11 +27,12 @@ export type BsVariant =
  * Central status → color table. Keys are the exact backend enum values.
  * Where the same string appears in multiple enums the intended meaning is
  * consistent, so a single table is safe. Buckets follow one app-wide
- * convention (see the design system doc): green = active/available, dark
- * green = completed/closed, blue = in-progress/active work, light blue
- * (info) = scheduled/future, orange = awaiting action, soft light-yellow
- * (warning) = Delayed/Pending/Maintenance, red = cancelled/rejected/failed,
- * purple = on hold, grey = neutral/not yet actioned.
+ * convention (see the design system doc): green = active/available, Lime
+ * Green = completed, dark green = closed, blue = in-progress/active work,
+ * light blue (info) = scheduled/future, orange = awaiting action,
+ * Calamansi (warning) = Maintenance, its own gold (pending) = Pending, its
+ * own amber (delayed) = Delayed, red = cancelled/rejected/failed, purple =
+ * on hold, grey = neutral/not yet actioned.
  */
 export const STATUS_VARIANT: Record<string, BsVariant> = {
   // green — active / available now
@@ -41,19 +45,25 @@ export const STATUS_VARIANT: Record<string, BsVariant> = {
   ReturnedToService: 'success',
   Assigned: 'success',
 
-  // dark green — finished/finalized, distinct from "currently active" green
-  Completed: 'success-dark',
+  // Lime Green — standardized "Completed" color app-wide, distinct from
+  // Closed's dark green and from the regular "active" green above.
+  Completed: 'lime',
+
+  // dark green — finished/finalized (Closed), distinct from Completed's
+  // Lime Green and from "currently active" green above.
   Closed: 'success-dark',
 
-  // soft light-yellow — unified per the app-wide palette: Delayed, Pending,
-  // and Maintenance all share one pale-amber treatment (see .badge.bg-warning
-  // / .fo-status-select-warning in components.css) rather than looking like
-  // distinct colors for what users perceive as the same "needs attention /
-  // waiting" state.
-  Delayed: 'warning',
+  // Maintenance — Calamansi (unchanged); Pending and Delayed each now have
+  // their own standardized color, distinct from Maintenance and from each
+  // other, per the final status color spec.
   Maintenance: 'warning',
   InMaintenance: 'warning',
-  Pending: 'warning',
+
+  // Pending — #FFF3CD / #856404, its own dedicated color.
+  Pending: 'pending',
+
+  // Delayed — #FFC04D / #000000 (black text), its own dedicated color.
+  Delayed: 'delayed',
 
   // red — cancelled / rejected / failed
   Cancelled: 'danger',
@@ -95,9 +105,12 @@ export const STATUS_VARIANT: Record<string, BsVariant> = {
   Unread: 'info',
 };
 
-/** Variants that need dark text for contrast on their light background. */
+/** Variants that need dark text for contrast on their light background.
+ *  'lime' (Completed) is intentionally excluded — it always uses white text. */
 export const DARK_TEXT_VARIANTS: BsVariant[] = [
   'warning',
+  'pending',
+  'delayed',
   'orange',
   'info',
   'light',

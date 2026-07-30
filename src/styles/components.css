@@ -141,15 +141,25 @@ body {
 .fo-stat-card.fo-stat-success {
   border-left-color: var(--fo-success);
 }
+.fo-stat-card.fo-stat-lime {
+  border-left-color: var(--fo-lime-border);
+}
+.fo-stat-card.fo-stat-lime .text-lime {
+  color: var(--fo-lime-border) !important;
+}
 /* Pending / Delayed / Maintenance stat cards (e.g. Coordinator dashboard's
-   "Pending" card) align with the same Sunshine Yellow used by warning
-   badges/chips/dropdowns elsewhere — only the left accent border and icon
-   pick up the color; the card body stays plain white like every other
-   stat card, never a yellow-filled background. */
-.fo-stat-card.fo-stat-warning {
+   "Pending" card) all share the same Sunshine Yellow accent regardless of
+   which of the three status colors their badges use elsewhere — only the
+   left accent border and icon pick up the color; the card body stays plain
+   white like every other stat card, never a yellow-filled background. */
+.fo-stat-card.fo-stat-warning,
+.fo-stat-card.fo-stat-pending,
+.fo-stat-card.fo-stat-delayed {
   border-left-color: var(--fo-sunshine-border);
 }
-.fo-stat-card.fo-stat-warning .text-warning {
+.fo-stat-card.fo-stat-warning .text-warning,
+.fo-stat-card.fo-stat-pending .text-pending,
+.fo-stat-card.fo-stat-delayed .text-delayed {
   color: var(--fo-sunshine-text) !important;
 }
 .fo-stat-card.fo-stat-danger {
@@ -262,10 +272,25 @@ body {
   background-color: var(--fo-soft-success-dark-bg) !important;
   color: var(--fo-soft-success-dark-fg) !important;
 }
+.badge.bg-lime {
+  background-color: var(--fo-soft-lime-bg) !important;
+  color: var(--fo-soft-lime-fg) !important;
+  border: none;
+}
 .badge.bg-warning {
   background-color: var(--fo-soft-warning-bg) !important;
   color: var(--fo-soft-warning-fg) !important;
-  border: 1px solid var(--fo-soft-warning-border);
+  border: none;
+}
+.badge.bg-pending {
+  background-color: var(--fo-soft-pending-bg) !important;
+  color: var(--fo-soft-pending-fg) !important;
+  border: none;
+}
+.badge.bg-delayed {
+  background-color: var(--fo-soft-delayed-bg) !important;
+  color: var(--fo-soft-delayed-fg) !important;
+  border: none;
 }
 .badge.bg-orange {
   background-color: var(--fo-soft-orange-bg) !important;
@@ -342,10 +367,25 @@ body {
   color: var(--fo-soft-success-dark-fg);
   border-color: transparent;
 }
+.fo-status-select-lime {
+  background-color: var(--fo-soft-lime-bg);
+  color: var(--fo-soft-lime-fg);
+  border-color: var(--fo-soft-lime-border);
+}
 .fo-status-select-warning {
   background-color: var(--fo-soft-warning-bg);
   color: var(--fo-soft-warning-fg);
   border-color: var(--fo-soft-warning-border);
+}
+.fo-status-select-pending {
+  background-color: var(--fo-soft-pending-bg);
+  color: var(--fo-soft-pending-fg);
+  border-color: var(--fo-soft-pending-border);
+}
+.fo-status-select-delayed {
+  background-color: var(--fo-soft-delayed-bg);
+  color: var(--fo-soft-delayed-fg);
+  border-color: var(--fo-soft-delayed-border);
 }
 .fo-status-select-orange {
   background-color: var(--fo-soft-orange-bg);
@@ -467,6 +507,12 @@ body {
 
 .modal-footer {
   border-top-color: var(--fo-border-color);
+}
+
+/* Ground Supervisor → Turnarounds page: "Actual" column values, applied
+   regardless of delay status (the separate delay badge still shows red). */
+.fo-turnaround-actual {
+  color: #b45309;
 }
 
 /* -----------------------------------------------------------------------

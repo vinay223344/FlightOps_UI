@@ -102,17 +102,32 @@
   --fo-soft-secondary-fg: #475569;
   --fo-soft-success-bg: rgba(22, 163, 74, 0.14);
   --fo-soft-success-fg: #15803d;
-  /* "Sunshine Yellow" — the single standardized color for Delayed / Pending /
-     Maintenance across the whole app (status dropdowns, badges, chips,
-     cards, tables, dashboards, notifications, reports). Solid fill (not a
-     translucent tint) so it reads identically regardless of the surface it
-     sits on. Reference: #FFFD37 / rgb(255, 253, 55). */
+  /* "Sunshine Yellow" — reserved EXCLUSIVELY for the Pending/Delayed/
+     Maintenance dashboard stat-card accent (left border + icon in
+     components.css). Not used for badges/dropdowns/chips/buttons — those
+     use Calamansi below instead. Reference: #FFFD37 / rgb(255, 253, 55). */
   --fo-sunshine-yellow: #fffd37;
   --fo-sunshine-border: #eab308;
   --fo-sunshine-text: #78350f;
-  --fo-soft-warning-bg: var(--fo-sunshine-yellow);
-  --fo-soft-warning-border: var(--fo-sunshine-border);
-  --fo-soft-warning-fg: var(--fo-sunshine-text);
+
+  /* "Calamansi" — the standardized "Maintenance" color across the whole
+     app. Reference: #FCFFA4 / rgb(252, 255, 164). Dark gray text, no
+     border — flat, per the final status color spec. */
+  --fo-calamansi: #fcffa4;
+  --fo-soft-warning-bg: var(--fo-calamansi);
+  --fo-soft-warning-border: transparent;
+  --fo-soft-warning-fg: #212529;
+
+  /* "Pending" — standardized #FFF3CD / #856404, no border. */
+  --fo-soft-pending-bg: #fff3cd;
+  --fo-soft-pending-border: transparent;
+  --fo-soft-pending-fg: #856404;
+
+  /* "Delayed" — standardized #FFC04D / black text, no border. */
+  --fo-soft-delayed-bg: #ffc04d;
+  --fo-soft-delayed-border: transparent;
+  --fo-soft-delayed-fg: #000000;
+
   --fo-soft-danger-bg: rgba(220, 38, 38, 0.12);
   --fo-soft-danger-fg: #b91c1c;
   --fo-soft-info-bg: rgba(8, 145, 178, 0.14);
@@ -122,10 +137,20 @@
   --fo-soft-dark-bg: rgba(15, 23, 42, 0.08);
   --fo-soft-dark-fg: #0f172a;
 
-  /* Dark green (completed/closed) — a deeper, more "finalized" green than
-     --fo-soft-success-* rather than a re-use of the same active-state hue. */
-  --fo-soft-success-dark-bg: rgba(22, 101, 52, 0.16);
-  --fo-soft-success-dark-fg: #14532d;
+  /* "Closed" — standardized flat pink/maroon per the final status color
+     spec, distinct from Completed's Lime Green below. No border. */
+  --fo-soft-success-dark-bg: #f8d7da;
+  --fo-soft-success-dark-fg: #721c24;
+
+  /* "Lime Green" — the standardized "Completed" color app-wide (badges,
+     chips, dropdowns, table columns, dashboards). Solid fill, not a tint,
+     per the reference spec. Reference: #32CD32 / rgb(50, 205, 50). White
+     text, no border. */
+  --fo-lime: #32cd32;
+  --fo-lime-border: #228b22;
+  --fo-soft-lime-bg: var(--fo-lime);
+  --fo-soft-lime-border: transparent;
+  --fo-soft-lime-fg: #ffffff;
 
   /* Orange (pending / awaiting action) */
   --fo-soft-orange-bg: rgba(194, 65, 12, 0.14);

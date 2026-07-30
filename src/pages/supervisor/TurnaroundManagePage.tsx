@@ -198,7 +198,7 @@ export default function TurnaroundManagePage() {
                           </td>
                           <td className="small">
                             {m.actualTime ? (
-                              <span className={m.delayed || m.isDelayed ? 'text-danger' : ''}>
+                              <span className="fo-turnaround-actual">
                                 {formatDateTime(m.actualTime)}
                                 {(m.delayed || m.isDelayed) && m.delayMinutes != null && (
                                   <Badge bg="danger" className="ms-1 fw-normal">
@@ -306,7 +306,7 @@ export default function TurnaroundManagePage() {
                           </td>
                           <td className="small">
                             {m.actualTime ? (
-                              <span className={m.delayed || m.isDelayed ? 'text-danger' : ''}>
+                              <span className="fo-turnaround-actual">
                                 {formatDateTime(m.actualTime)}
                                 {(m.delayed || m.isDelayed) && m.delayMinutes != null && (
                                   <Badge bg="danger" className="ms-1 fw-normal">
