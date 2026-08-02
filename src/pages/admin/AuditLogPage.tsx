@@ -1,11 +1,12 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Col, Form, Row, Table } from 'react-bootstrap';
 import { AsyncSection, PageHeader, Pagination } from '../../components/common';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { useAudit } from '../../hooks/useAudit';
 import type { AuditLogFilters } from '../../types';
-import { formatDateTime, fromDateTimeLocalInput } from '../../utils';
+import { formatDateTime, fromDateTimeLocalInput, getErrorMessage } from '../../utils';
 import { Label } from 'recharts';
+import { useToast } from '../../context/ToastContext';
 
 interface FilterForm {
   userEmail: string;
@@ -33,11 +34,19 @@ export default function AuditLogPage() {
   const [filters, setFilters] = useState<AuditLogFilters>({});
   const [page, setPage] = useState(1);
 
+  const toast = useToast();
+
   const { logs, totalPages, currentPage, loading, error, reload } = useAudit(
     filters,
     page,
     10,
   );
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error, toast]);
 
   const applyFilters = useCallback(() => {
     const next: AuditLogFilters = {};
