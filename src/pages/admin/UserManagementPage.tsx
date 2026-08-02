@@ -5,6 +5,7 @@ import {
   AsyncSection,
   ConfirmDialog,
   PageHeader,
+  Pagination,
   StatusBadge,
 } from '../../components/common';
 import { useToast } from '../../context/ToastContext';
@@ -37,7 +38,9 @@ const EMPTY_FORM: CreateForm = {
 export default function UserManagementPage() {
   usePageTitle('User Management');
   const toast = useToast();
-  const { users, loading, error, reload } = useUsers();
+  const [page, setPage] = useState(1);
+  const { users, totalPages, currentPage, loading, error, reload } =
+    useUsers(page, 10);
   const { confirmState, confirm, onConfirm, onCancel } = useConfirm();
 
   const [showCreate, setShowCreate] = useState(false);
@@ -180,6 +183,12 @@ export default function UserManagementPage() {
           </tbody>
         </Table>
       </AsyncSection>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
 
       <Modal show={showCreate} onHide={closeCreate} centered>
         <Modal.Header closeButton>

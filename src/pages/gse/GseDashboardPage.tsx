@@ -18,6 +18,7 @@ import {
 import {
   AsyncSection,
   PageHeader,
+  Pagination,
   StatCard,
   StatusBadge,
 } from '../../components/common';
@@ -48,7 +49,25 @@ const emptyRegisterForm = (): GroundEquipmentRequest => ({
 export default function GseDashboardPage() {
   usePageTitle('GSE Dashboard');
   const toast = useToast();
-  const { equipment, loading, error, reload } = useEquipment();
+
+  // Fleet-wide fetch (large limit) for the KPI cards + status pie chart, which
+  // must reflect the whole fleet regardless of which page is on screen below.
+  const { equipment: fleet, reload: reloadFleet } = useEquipment(1, 1000);
+
+  // Paginated fetch (10/page) for the equipment card grid itself.
+  const [page, setPage] = useState(1);
+  const {
+    equipment,
+    totalPages,
+    currentPage,
+    loading,
+    error,
+    reload: reloadPage,
+  } = useEquipment(page, 10);
+
+  const reload = useCallback(async () => {
+    await Promise.all([reloadFleet(), reloadPage()]);
+  }, [reloadFleet, reloadPage]);
 
   // Bug 2: Register equipment modal on dashboard
   const [showRegister, setShowRegister] = useState(false);
@@ -63,11 +82,11 @@ export default function GseDashboardPage() {
       Maintenance: 0,
       OutOfService: 0,
     };
-    for (const e of equipment) {
+    for (const e of fleet) {
       if (e.status in base) base[e.status] += 1;
     }
     return base;
-  }, [equipment]);
+  }, [fleet]);
 
   const pieData = useMemo(
     () =>
@@ -166,7 +185,7 @@ export default function GseDashboardPage() {
         <Col md={6} xl>
           <StatCard
             label="Total"
-            value={equipment.length}
+            value={fleet.length}
             icon={IconBuildingWarehouse}
             accent="secondary"
             hint="Registered equipment"
@@ -249,6 +268,12 @@ export default function GseDashboardPage() {
           </Col>
         </Row>
       </AsyncSection>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
 
       {/* Bug 2: Register Equipment Modal */}
       <Modal show={showRegister} onHide={closeRegister} centered>

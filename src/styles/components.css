@@ -461,6 +461,41 @@ body {
 }
 
 /* -----------------------------------------------------------------------
+   Pagination (server-side page navigation — Users, Audit Log, Equipment)
+   ----------------------------------------------------------------------- */
+.fo-pagination .page-link {
+  color: var(--fo-slate-600);
+  border-color: var(--fo-border-color);
+  background-color: var(--fo-surface);
+  font-weight: 600;
+  transition:
+    background-color var(--fo-transition),
+    color var(--fo-transition),
+    border-color var(--fo-transition);
+}
+
+.fo-pagination .page-link:hover {
+  background-color: var(--fo-slate-100);
+  color: var(--fo-primary);
+}
+
+.fo-pagination .page-link:focus {
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+}
+
+.fo-pagination .page-item.active .page-link {
+  background-color: var(--fo-primary);
+  border-color: var(--fo-primary);
+  color: #fff;
+}
+
+.fo-pagination .page-item.disabled .page-link {
+  color: var(--fo-slate-400);
+  background-color: var(--fo-surface);
+  border-color: var(--fo-border-color);
+}
+
+/* -----------------------------------------------------------------------
    Accordion (Turnaround sections) — modern, subtle item borders instead of
    the flush/flat default, so each turnaround plan reads as a distinct card.
    ----------------------------------------------------------------------- */

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Button, Card, Form, Modal, Table } from 'react-bootstrap';
 import { IconPlus } from '@tabler/icons-react';
-import { AsyncSection, PageHeader } from '../../components/common';
+import { AsyncSection, PageHeader, Pagination } from '../../components/common';
 import { useToast } from '../../context/ToastContext';
 import { useEquipment } from '../../hooks';
 import { usePageTitle } from '../../hooks/usePageTitle';
@@ -18,7 +18,9 @@ import {
 export default function EquipmentListPage() {
   usePageTitle('Equipment');
   const toast = useToast();
-  const { equipment, loading, error, reload } = useEquipment();
+  const [page, setPage] = useState(1);
+  const { equipment, totalPages, currentPage, loading, error, reload } =
+    useEquipment(page, 10);
 
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -149,6 +151,12 @@ export default function EquipmentListPage() {
           </Card.Body>
         </Card>
       </AsyncSection>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
 
       <Modal show={showModal} onHide={closeModal} centered>
         <Modal.Header closeButton>

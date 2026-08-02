@@ -43,7 +43,7 @@ export default function TopNavbar({
       <Navbar.Brand className="fo-brand d-flex align-items-center gap-2 mb-0">
         <IconPlaneTilt size={22} />
         <span>FlightOps</span>
-        <span className="text-secondary fw-normal d-none d-md-inline">
+        <span className="text-white fw-normal d-none d-md-inline">
           · {portalTitle}
         </span>
       </Navbar.Brand>

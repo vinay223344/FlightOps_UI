@@ -8,12 +8,15 @@ import type {
   EquipmentStatus,
   GroundEquipmentRequest,
   GroundEquipmentResponse,
+  PagedResponse,
 } from '../types';
 
 export const equipmentApi = {
-  async list(): Promise<GroundEquipmentResponse[]> {
-    const res =
-      await api.get<ApiResponse<GroundEquipmentResponse[]>>('/api/equipment');
+  async list(page = 1, limit = 10): Promise<PagedResponse<GroundEquipmentResponse>> {
+    const res = await api.get<ApiResponse<PagedResponse<GroundEquipmentResponse>>>(
+      '/api/equipment',
+      { params: { page, limit } },
+    );
     return res.data.data;
   },
 

@@ -15,3 +15,11 @@ export interface ApiErrorBody {
   timestamp?: string;
   errors?: Record<string, string>;
 }
+
+/** Standard server-side pagination envelope (mirrors backend PageResponse<T>). */
+export interface PagedResponse<T> {
+  data: T[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+}

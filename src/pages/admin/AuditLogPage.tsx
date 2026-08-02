@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Button, Card, Col, Form, Row, Table } from 'react-bootstrap';
-import { AsyncSection, PageHeader } from '../../components/common';
+import { AsyncSection, PageHeader, Pagination } from '../../components/common';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { useAudit } from '../../hooks/useAudit';
 import type { AuditLogFilters } from '../../types';
@@ -31,8 +31,13 @@ export default function AuditLogPage() {
 
   const [formState, setFormState] = useState<FilterForm>(EMPTY);
   const [filters, setFilters] = useState<AuditLogFilters>({});
+  const [page, setPage] = useState(1);
 
-  const { logs, loading, error, reload } = useAudit(filters);
+  const { logs, totalPages, currentPage, loading, error, reload } = useAudit(
+    filters,
+    page,
+    10,
+  );
 
   const applyFilters = useCallback(() => {
     const next: AuditLogFilters = {};
@@ -42,11 +47,13 @@ export default function AuditLogPage() {
     if (formState.from) next.from = fromDateTimeLocalInput(formState.from);
     if (formState.to) next.to = fromDateTimeLocalInput(formState.to);
     setFilters(next);
+    setPage(1);
   }, [formState]);
 
   const clearFilters = useCallback(() => {
     setFormState(EMPTY);
     setFilters({});
+    setPage(1);
   }, []);
 
   return (
@@ -148,6 +155,12 @@ export default function AuditLogPage() {
           </tbody>
         </Table>
       </AsyncSection>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </>
   );
 }
