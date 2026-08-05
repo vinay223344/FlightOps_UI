@@ -98,7 +98,6 @@ export type EquipmentType =
   | 'GPU'
   | 'AirStarter'
   | 'TowTractor'
-  | 'Catering';
 export const EQUIPMENT_TYPES: EquipmentType[] = [
   'StairsTruck',
   'BaggageBelt',
@@ -106,7 +105,6 @@ export const EQUIPMENT_TYPES: EquipmentType[] = [
   'GPU',
   'AirStarter',
   'TowTractor',
-  'Catering',
 ];
 
 export type EquipmentStatus =

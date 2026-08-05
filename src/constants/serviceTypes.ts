@@ -2,7 +2,6 @@
  * These MUST match the keys in SERVICE_TO_MILESTONES exactly.
  */
 export const HANDLING_SERVICE_OPTIONS: string[] = [
-  'Ramp',
   'Baggage',
   'Cleaning',
   'Catering',

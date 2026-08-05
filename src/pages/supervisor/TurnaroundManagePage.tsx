@@ -32,7 +32,7 @@ export default function TurnaroundManagePage() {
   const { confirmState, confirm, onConfirm, onCancel } = useConfirm();
   const [busy, setBusy] = useState(false);
 
-  // Bug 5: Accordion open state – default to first plan
+  // Accordion open state
   const [activeKey, setActiveKey] = useState<string | null>(null);
 
   const [showModal, setShowModal] = useState(false);
@@ -88,13 +88,11 @@ export default function TurnaroundManagePage() {
     [confirm, toast, reload],
   );
 
-  // Bug 1: Look up handling request for the selected flight, derive milestone types
   const handleCreate = useCallback(async () => {
     setValidated(true);
     if (!flightId || !target || target <= 0) return;
     setSubmitting(true);
     try {
-      // Fetch handling requests for this flight to derive milestoneTypes
       let milestoneTypes: MilestoneType[] = [];
       try {
         const flightRequests = await handlingRequestsApi.listByFlight(flightId);
@@ -105,7 +103,7 @@ export default function TurnaroundManagePage() {
           milestoneTypes = getMilestoneTypesForServices(confirmedRequest.serviceTypes);
         }
       } catch {
-        // If no handling request found, milestoneTypes stays empty (backend falls back to all 10)
+        // If no handling request found, milestoneTypes stays empty (backend falls back to all)
       }
 
       await turnaroundsApi.create({
@@ -262,10 +260,21 @@ export default function TurnaroundManagePage() {
         >
           {completedPlans.map((t) => {
             const completed = t.milestones.filter(
-              (m) => m.status === 'Completed',
+              (m) => m.status !== 'Pending',
             ).length;
             const total = t.milestones.length;
             const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            // Calculate if the completed turnaround was delayed based on actual vs target time
+            const isDelayed =
+              t.actualTurnaroundMinutes != null &&
+              t.actualTurnaroundMinutes > t.targetTurnaroundMinutes;
+
+            const completedStatusText = isDelayed
+              ? 'Completed with Delay'
+              : 'Completed On Time';
+
+            const badgeBg = isDelayed ? 'danger' : 'success';
 
             return (
               <Accordion.Item eventKey={t.planId} key={t.planId}>
@@ -274,9 +283,14 @@ export default function TurnaroundManagePage() {
                   {t.stand && (
                     <span className="text-muted me-2 small">· Stand {t.stand}</span>
                   )}
-                  <StatusBadge status={t.status} />
-                  <span className="ms-3 small text-muted">
+                  <Badge bg={badgeBg} className="me-2 fw-semibold">
+                    {completedStatusText}
+                  </Badge>
+                  <span className="ms-2 small text-muted">
                     Target {formatMinutes(t.targetTurnaroundMinutes)}
+                    {t.actualTurnaroundMinutes != null && (
+                      <> · Actual {formatMinutes(t.actualTurnaroundMinutes)}</>
+                    )}
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
@@ -333,16 +347,6 @@ export default function TurnaroundManagePage() {
                     >
                       View Detail
                     </Link>
-                    {t.status !== 'Completed' && (
-                      <Button
-                        size="sm"
-                        variant="outline-success"
-                        disabled={busy}
-                        onClick={() => handleComplete(t.planId)}
-                      >
-                        Mark Complete
-                      </Button>
-                    )}
                   </div>
                 </Accordion.Body>
               </Accordion.Item>
@@ -385,18 +389,6 @@ export default function TurnaroundManagePage() {
                 </Button>
               ))}
             </div>
-            {/* <Form.Control
-              type="number"
-              min={1}
-              value={target}
-              onChange={(e) =>
-                setTarget(e.target.value === '' ? '' : Number(e.target.value))
-              }
-              isInvalid={validated && (!target || target <= 0)}
-            />
-            <Form.Control.Feedback type="invalid">
-              Enter a positive number of minutes.
-            </Form.Control.Feedback> */}
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>

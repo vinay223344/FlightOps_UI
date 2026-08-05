@@ -63,7 +63,7 @@ export default function GseDashboardPage() {
     loading,
     error,
     reload: reloadPage,
-  } = useEquipment(page, 10);
+  } = useEquipment(page);
 
   const reload = useCallback(async () => {
     await Promise.all([reloadFleet(), reloadPage()]);
@@ -207,20 +207,20 @@ export default function GseDashboardPage() {
             <Col xs={12} lg={4}>
               <Card className="h-100 shadow-sm">
                 <Card.Body className="d-flex flex-column">
-                  <Card.Title className="h6 mb-3">
-                    Status distribution
-                  </Card.Title>
-                  <div className="flex-grow-1 d-flex align-items-center justify-content-center">
-                    <ResponsiveContainer width="100%" height={280}>
-                      <PieChart margin={{ top: 0, right: 8, bottom: 0, left: 8 }}>
+                  <Card.Title className="h6 mb-4">Status distribution</Card.Title>
+                  
+                  <div style={{ width: '100%', height: 320 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart margin={{ top: 20, right: 15, bottom: 5, left: 15 }}>
                         <Pie
                           data={pieData}
                           dataKey="value"
                           nameKey="name"
                           cx="50%"
                           cy="42%"
-                          outerRadius="70%"
-                          label
+                          outerRadius="78%"
+                          labelLine={true}
+                          label={({ value }) => value}
                         >
                           {pieData.map((d) => (
                             <Cell
@@ -234,7 +234,7 @@ export default function GseDashboardPage() {
                           layout="horizontal"
                           verticalAlign="bottom"
                           align="center"
-                          wrapperStyle={{ paddingTop: 12 }}
+                          wrapperStyle={{ paddingTop: 0 }}
                         />
                       </PieChart>
                     </ResponsiveContainer>

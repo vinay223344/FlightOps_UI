@@ -8,7 +8,7 @@ import type {
 } from '../types';
 import { useAsyncData } from './useAsyncData';
 
-export function useEquipment(page = 1, limit = 10) {
+export function useEquipment(page = 1, limit = 12) {
   const fetcher = useCallback(() => equipmentApi.list(page, limit), [page, limit]);
   const { data, loading, error, reload } =
     useAsyncData<PagedResponse<GroundEquipmentResponse>>(fetcher);
@@ -33,7 +33,7 @@ export function useAvailableEquipment() {
 
 export function useAllocations(userId?: string) {
   const fetcher = useCallback(() =>
-    userId ? allocationsApi.getByUser(userId) : allocationsApi.list(), []);
+    userId ? allocationsApi.getByUser(userId) : allocationsApi.list(), [userId]);
   const { data, loading, error, reload } = useAsyncData<
     EquipmentAllocationResponse[]
   >(fetcher);
