@@ -27,7 +27,6 @@ const STATUS_OPTIONS = [
   { label: 'Disputed', value: 'Disputed' },
 ];
 
-const EMPTY_FILTERS: FilterForm = { status: '', date: '' };
 
 export default function HandlingRequestsPage() {
   usePageTitle('Your Handling Requests');

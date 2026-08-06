@@ -32,7 +32,6 @@ export default function FlightSelect({
       <option value="">{placeholder}</option>
       {flights.map((f) => (
         <option key={f.flightId} value={f.flightId}>
-          {f.airlineCode}
           {f.flightNumber} · {f.origin}→{f.destination}
         </option>
       ))}

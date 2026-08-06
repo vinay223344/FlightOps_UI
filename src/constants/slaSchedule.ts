@@ -10,8 +10,8 @@ export interface SlaMilestone {
 /** Mirrors the hardcoded SLA_OFFSETS in the backend TurnaroundService. */
 export const SLA_SCHEDULE: SlaMilestone[] = [
   { type: 'ChocksOn', offsetMinutes: 2, description: 'Aircraft chocked at stand' },
-  { type: 'DoorOpen', offsetMinutes: 7, description: 'Aircraft doors opened' },
   { type: 'StairsDocked', offsetMinutes: 5, description: 'Passenger stairs docked' },
+  { type: 'DoorOpen', offsetMinutes: 7, description: 'Aircraft doors opened' },
   { type: 'BaggageOffload', offsetMinutes: 25, description: 'Inbound baggage offloaded' },
   { type: 'Cleaning', offsetMinutes: 35, description: 'Cabin cleaning complete' },
   { type: 'Catering', offsetMinutes: 40, description: 'Catering uplift complete' },

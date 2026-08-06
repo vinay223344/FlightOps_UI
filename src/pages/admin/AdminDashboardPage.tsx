@@ -101,7 +101,7 @@ export default function AdminDashboardPage() {
       <Row className="g-3 mt-1">
         <Col lg={7}>
           <Card className="shadow-sm h-100">
-            <Card.Header className="fw-semibold">Turnarounds today</Card.Header>
+            <Card.Header className="fw-semibold">Turnarounds</Card.Header>
             <Card.Body>
               <AsyncSection
                 loading={metricsLoading}
