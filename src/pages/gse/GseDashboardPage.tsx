@@ -168,14 +168,6 @@ export default function GseDashboardPage() {
         </Col>
         <Col md={6} xl>
           <StatCard
-            label="Maintenance"
-            value={counts.Maintenance}
-            icon={IconTool}
-            accent="warning"
-          />
-        </Col>
-        <Col md={6} xl>
-          <StatCard
             label="Out of Service"
             value={counts.OutOfService}
             icon={IconTool}
